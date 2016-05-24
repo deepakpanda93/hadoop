@@ -1,0 +1,45 @@
+Big Data, general term for data sets so large and complex.
+Volume (TB, PB)
+Variety (web, photo, video, audio, unstructured data)
+Velocity (batch, periodic, real time)
+Veracity (quality of the data, could be data with wrong format or data types - dirty)
+
+Need to store and process huge amount of data, needed for web and cloud application.
+RDMBS - Not scale without expensive hardware, only good with clean data, fault tolerant is expensive.
+Existing process techniques does not scale without extensive code development.
+
+2002 - Apache Nutch
+2003 - Google File System and Map Reduce.
+2004 - GFS and MT to Nutch project
+2006 - Hadoop is created.
+2008 - Apps started to emerge
+2009 - Companies start to emerge using hadoop - Clouder, Horthonworks
+
+  -----   Hadoop    -------
+  
+Elephant toy called Hadoop - Doug Cutting
+Consist in 2 components
+  - HDFS
+  - Map Reduce
+Platform as a service to data ingestion, processing and analytics of data
+Unix based not windows support. Built natively in JAVA. Command Line based, not much UI
+
+-- Hadoop Distributed File System.
+Another Distributed file system files and directories. Distribuited files across different nodes
+Optimized for very large files (TB, PB), optimized write-once, read many, you could not update the file
+Fault tolerant by default - No bkps required, as it have replication in 3 nodes. Always a copy of the file.
+Data replication happens all the time, if is missing or its a new.
+Runs on commodity hardware. Not need big machines to develop processes.
+Move code to where data resides, not viceversa, data is left in the nodes, code is move to the nodes.
+Master - Slave architecture, processes are both and running in java
+Built as a HDFS Cluster :  
+    NameNode (Master) - Manage cluster, manage meta-data, which file store in which node, allocate work to data nodes
+    DataNode (Slave) - Storage and read-write operations, work is being done here
+
+File are split in blocks of 64 MB, namenode manage information for blocks.
+Each node is replicate 3 times, across multiple data nodes.
+Client  -- NameNode --- DataNode  . client request R/W permission, namenode give list of datanodes
+Client -----------------DataNode  . client R/W directly to data node.
+HDFS is rack-aware.  The copies are created in at least 2 racks.
+
+
