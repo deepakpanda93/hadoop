@@ -1,0 +1,39 @@
+Runs on JVM and have certain interoperability with JAVA
+Scalable Language
+High perfomance,
+Statically typed, flexible syntaxis.
+Multi paradigm - Interactive, Functional and Object Oriented
+
+
+Values are inmutable, they can not change or reassign anything  (val myNumber : Int = 2)
+Variables can change (var myString: String = "hello")
+
+Data types:
+Numerics : Byte, Short, Int, Long, Float, Double
+Char, String , Boolean, Null
+
+Operators
+Arithmetic +,-,*,/,%
+Relational ==, !=.
+Logical
+Assignment
+
+Conditions
+if-else
+val myVar = empCount match {  case 1:  , case 2:, case _:  }
+
+Looping
+while(){}
+for() {}
+
+Functions
+def functionName (param1:Int, param2:DataType) : ReturnDataType = {}
+
+Collections
+Arrays, val x:Array[String] = Array ("a", "b", "c"); --- Sotre same type and are mutable, index starts from zero. x(index)
+List, val y:List[Int] = List(5,6,10) -- is inmutable, index start at zero, sequential list of same type
+Tuples, val employee = (1001, "Maur", false) --- two or more values, starts from 1, can be of different types emp._1
+Map, val employee = Map("id" => "10001", "name" -> "Mauricio" ), stores key-value pair ...  employee("id")
+
+
+
