@@ -43,3 +43,67 @@ Client -----------------DataNode  . client R/W directly to data node.
 HDFS is rack-aware.  The copies are created in at least 2 racks.
 
 
+Map Reduce
+New programming paradigm built to exploit the parallel nature of HDFS data.
+Run the same programm in parallel working with different same of data.
+Batch mode execution, running from hours and finding outputs.
+Move the program code to the data nodes, we could also chain the map reduce for a large solution
+
+Components.
+    Job Manager , run on name node, plans the execution of job, works with the namenode, return result to client
+                  invoke tasks in another node if one fails.
+    Task Manager, each run in the data node, execute the map and reduce functions, execute the jobs.
+    
+    YARN (MapReducev2)  Job Manager is split across = Application Manager and Resource Manager. More robust solution
+    
+Map and Reduce
+    Map, function that takes input values and output is key and values.
+          run once per line in the file.
+    Reduce, function that works on that key at the time, output is key and values. 
+
+1.Map Function
+2.Reduce Function
+3.Jar or iles with the code
+4.Input HDFS directory
+5.Output HDFS directory (be sure this does not exists)
+
+Input is being splitted, basically pass to a specific data node, then the client copies files containing map function to each node 
+identified as a node, then the code is being executed there by the local task manager, at this step multiple processes will run
+in parallel on different splits.
+
+Task manager iterate on the input files and run the function map, the map function interpret / split / convert and process lines.
+Map function clean data (format), some filter capabilities as well
+Map function generate key/values.
+
+Merge and Sort step is done in hadoop, the output for all the executions in the datanodes are merge and then sorted by the keys.
+Values for the same key are converted to a list, so you could have no more repeated keys, instead you have one line per key and the
+values form a list.  <key, listOfValues)
+
+Typycally one reduce function is executed, the input for reduce function is the output of merge and sort process, then the reduce
+function iterates over key by key and it is called once for each key,
+Reduce function can work across multiple key, the output of reduce function is placed in output directory.
+
+extends Mapper<Object, Text, Text, IntWritable>
+public void map (Object key, Text text, Context context) throws IOException, InterruptedException{}
+
+extends Reducer<Text, IntWritable, Text, IntWritable>
+public void reduce (Text key, Iterable<IntWritable> values, Context context)
+
+Job job = new Job(conf, "Name");
+job.setJarByClass
+job.setMapperClass
+job.setReducerClass
+job.setOutputKeyClass
+job.setOutputValueClass
+File.addInputPath
+File.addOutputPath
+
+haddop jar exercise.jar exercise data output
+hadoop jar name.jar class_file input_dir output_dir
+
+
+Hadoop Stack.
+
+
+
+
