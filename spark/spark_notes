@@ -1,0 +1,29 @@
+http://spark.apache.org.
+Fast and general engine for large-scala data processing, faster than apache hadoop as it is not batch processing.
+Cluster computing framework, and it is open source engine.
+End-to-end analythics.
+Develop to overcome limitation of haddop, map reduce are very disk based and batch processing. More real time
+Spark keeps data in memory, can be run along other hadoop components.
+Can run in single desktop or huge clusters
+Iterative and interactive(analytic shell) or stream processing (data is comming and you do some processing)
+Scala, R, Python, Java. --- Spark is develop in Scala.
+Options alibraries like Graph, SQL, ML, Streaming
+
+Use Cases.
+ - Data integration and ETL
+ - Interactive  Analytics.
+ - High Performance Batch computation
+ - Machine Libraries and Advanced Analytics.
+ - Real time stream processing.
+ 
+      Credit Card Fraud Detection
+      Network Intrusion Detection
+      Advertisement Targeting.
+
+Workflow.
+ Load from Source, HDFS, NoSQL, S#, Real time sources
+ Transform data, filter, clean, join,enhance
+ Store processed data, memory, hdfs, nosql
+ Interactive Analytics, shells, spark sql, third-party tools
+ Machine Learning, discovery and algorithms
+ Action based on decisition and results of analysis
