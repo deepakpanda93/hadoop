@@ -103,6 +103,25 @@ hadoop jar name.jar class_file input_dir output_dir
 
 
 Hadoop Stack.
+-HDFS
+-Map-Reduce
+-Flume & Sqoop, data injection application from RDMS to hadoop, RDMS to HDFS
+               log messages
+-PIG, data processing analaytic tool and programming language, to write data processing and summarization process.
+     pig code to map reduce and then map reduce executed in MR
+-HIVE, SQL like functionallity, can write SQL queries and executed on top of haddop, convert queries to map reduce.
+-Mahout, machine learning libraries and application, there is algortihms .
+-Custom MR.
+
+-Impala, does not use MR and is like SQL style like Hive
+-Hbase, columnar database base on hdfs, key/value pair, no schema, access by the key is fast.
+-Spark, real time data in real time, streamming, and machine learning.
+-Storm, real time tool based on streaming, process result.
+
+-Zookeeper, use for management, internally store the nodes, the applications, we could find use running applications.
+-Oozie, scheduler application, you could schedule any job.
+
+
 
 
 
