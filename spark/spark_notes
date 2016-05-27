@@ -27,3 +27,63 @@ Workflow.
  Interactive Analytics, shells, spark sql, third-party tools
  Machine Learning, discovery and algorithms
  Action based on decisition and results of analysis
+
+Spark Fwk.
+1. Programming ----- Scala
+               ----- Python
+               ----- Java
+               ----- R
+               ----- Tools
+2. Library --------- SPARK SQL, provide an easy SQL interface on SPARK
+           --------- ML Lib, machine librart, a bounch of machine learning algorithm
+           --------- GraphX, perform graph anaylisis
+           --------- Streaming, analyze real time data, sockets, or streams.
+3. Engine ---------- SPARK CORE, perform operations, support interface to get and store
+4. Management ------ YARN, distribuited scheduled system, you could use to manage SPARK
+              ------ MESOS
+              ------ SPARK SCHEDULER
+5. Storage --------- LOCAL, local fylesystem
+           --------- HDFS
+           --------- S3
+           --------- RDBMS
+           --------- NoSQL
+           
+           
+           
+Resilient Distribuited Datasets (RDD)
+Anything you do is around RDD, basically you create, transform, analyze and store RDD in Spark
+RDD have types like String, Lines, Rows, Objects, Collections
+RDD can be distribuited across multiple nodes.
+RDD are immutable, once created you can not changes, only if yo do transformation, but you create new RDD
+RDD can be cached and also persisted (Memory or Disk)
+Actions are used to analyze RDD and provide results.
+
+
+Architecture.
+A. Master Node 
+  A.1 Driver Program, program or interactive shell, main executable program, control and coordinates all operations. Main class
+                      defines as well the RDD and execute the jobs.
+     A.1.1  Spark Context, anything you do go to this context. Create the RDD, give links, represent connection to computer cluster
+                           used to build the RDDs, communicate with cluster manager and manage executors running on workers.
+                           distribuited also the RDDS in the cluster, and finally collect the results.
+     
+B. Cluster Manager, identify the worker nodes and pass the tasks.
+
+C. Worker Node, handle the RDD, are the slaves nodes and execute the tasks, execute jobs in fast way
+ C.1 Executor
+  C.1.1 Task
+  C.1.2 Cache, you could have more RDD in memory than disk
+  
+Spark scalability
+ Single JVM
+ Managed Cluster
+ 
+ Spark Modes
+  Batch mode - Scheduled
+  Interactive mode - Interactive
+  Streaming mode - Continuos
+  
+ Lazy evaluation : Do not load or transform data unless an action is performed... Internally optimize operations and resource usage
+   collect operation will make an eager evaluation.
+   
+ 
