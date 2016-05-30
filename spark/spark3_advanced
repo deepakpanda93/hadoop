@@ -1,0 +1,5 @@
+RDD can be created from Text files, JSON, parallize on collections, sequence files.
+RDD can be stored to text files, JSON, sequence files, collections, databases, or use SPARK utilities 
+
+Partitioning and Persistence
+Partitions are enable per RDD by default, based on the parameter spark.default.parallelism, by default number of cores in clusters
