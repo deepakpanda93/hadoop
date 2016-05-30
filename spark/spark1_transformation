@@ -1,0 +1,38 @@
+Perform operation on one RDD to create a new RDD
+This actions are used to operate on one element at the time
+Lazy evaluation
+Can be distribuited in multiples nodes, based on the partitions and act independently.
+
+-MAP transformation
+  newRdd = rdd.map(function)
+  Similar to map reduce, element level computation
+  Result RDD can have the same number of original RDD
+  ResultSet can be different in the data type of result
+  Can pass functions to operate complex
+    Data Standardization 
+    Element Level computations - compute tax
+    Add new attributes - Grades based on test scores
+    
+-FLATMAP 
+  newRdd = rdd.flatMap(function)
+  Can return more elements than the original map
+  Break elements to generate new ones.
+    Split strings and extract child elements from json
+    
+-FILTER
+ newRdd = rdd.filter(function)
+ Filter elements based on the conditions
+ Result is a subset of the original.
+ Pass evaluation function that returns true/false
+ 
+-SET OPERATIONS
+    .Union
+      unionRDD = firstRDD.union(secondRDD)
+    .Intersection
+     intersectionRDD = firstRDD.intersect(secondRDD)
+    .MINUS
+
+-PAIR RDDS
+  Pair RDD can store key/value pairs.
+   .mapValues, transform each value no changing key
+   .flatMapValues, generate multiple values with the same key
