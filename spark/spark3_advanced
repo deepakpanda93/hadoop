@@ -1,5 +1,25 @@
 RDD can be created from Text files, JSON, parallize on collections, sequence files.
 RDD can be stored to text files, JSON, sequence files, collections, databases, or use SPARK utilities 
 
-Partitioning and Persistence
+Partitioning 
 Partitions are enable per RDD by default, based on the parameter spark.default.parallelism, by default number of cores in clusters
+Should configure in large clusters to know what is the correct partition size.
+Can be specified the number during creation of RDD
+If you transform the same number of partition than the source will be used.
+
+Persistence
+Load when need to be used and dropped once is over.
+Can be persistent intermediate RDD to save it to avoid reprocessing,
+  persist()- Memory, disk, shared or third sink
+  cache()- Use the default persist method - In memory
+
+Broadcast variables.
+All the variables all local unles you use broadcast variables, and can be used across the entire cluster
+Used to lookup tables or similars
+Read only variables shared in all nodes
+Spark optimization of distribution and storage to get better performance.
+
+Accumulators.
+A shared variables that can be used and updates in all the nodes in any moment.
+Help when the reduce operations not take certain items, for any unsupport things
+Spark distribute and takes care of race conditions
