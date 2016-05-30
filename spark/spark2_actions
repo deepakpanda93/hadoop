@@ -1,0 +1,33 @@
+Actions.
+Produce a Result not an RDD.
+trigger the actions and execute the previously lazy evaluation functions
+
+collect-return elements of RDD as an array
+count
+first - first element in the RDD
+take(n), returns the first n elements
+reduce, performs operations across, each element in the RDD and return a result such as: sum, count
+        reduce takes a function that takes to values function(input1, input2), reduce function, recursively in each element in RDD
+        a, b, c, d, e
+        R,    c
+              R, d
+                 R, e
+                    R  -- recursively function
+                    
+        Does not work in partitions, in only performs in nodes, execute in serial fashion, not in pararell 
+        
+aggregate, parallel computation across partitions and then combine them
+           execute action and then aggregate
+            - sequence, perform in each partition, can be happen in parallel
+            - combine, combine result of the sequence operation results, and produce a global result.
+            
+            seqOp = (lambda x, y:  function)
+            combOp = (lambda x, y: function)
+            collData.aggregate((0,1), seqOp, comboOp)
+            
+            
+  Pair RDD
+  countByKey
+  groupByKey
+  reduceByKey
+  aggregateByKey
