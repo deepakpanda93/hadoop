@@ -19,10 +19,25 @@ DataFrame. Is the unit for SparkSQL is an enhanced RDD, but additional capabilit
     registerAsTempTable , register dataframe as table within SQLContext, you then could run SQL queries
     Operations can be nested in a pipeline.
     
+  Methods.
+  sqlContext.read.json()
+  .show() - like table
+  .printSchema() - show data types and nullable options
+  .select("columnNam").show()
+  .select("columnNam1", "col2").show(2)
+  .filter(dff("col1") === value).show()
+  .groupBy().count()
+  .groupBy().agg(avg(), sum()).show()
+  
+  
+    
 SQLContext
  SparkSQL functiones are accessed through it.
  Derived from SparkContext, their is achil.
  DataFrame are created using it.
  Provides a standard interdace to work across different datasoruces
  Can register Data Frames as temporal tables and start running commands on them
+ var sqlContext = new org.apache.spark.sql.SQLContext(sc);
+ import sqlContext.implicits._
+ 
  
