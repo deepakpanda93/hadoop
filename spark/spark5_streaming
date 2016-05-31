@@ -34,3 +34,5 @@ Spark helps you
     -Sliding interval multiple of interval
     
     
+var ssc =  new StreamingContext(sc, Seconds(1))
+var rddQueue = new Queue[RDD[Int]]()
