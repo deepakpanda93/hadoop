@@ -83,7 +83,15 @@ Spark scalability
   Interactive mode - Interactive
   Streaming mode - Continuos
   
- Lazy evaluation : Do not load or transform data unless an action is performed... Internally optimize operations and resource usage
-   collect operation will make an eager evaluation.
+ Lazy evaluation : Do not load or transform data unless an action is performed.
+    Internally optimize operations and resource usage collect operation will make an eager evaluation.
+    You are taking notes, you are not executing nothing, action are the triggers for the commands
    
- 
+ RDD Lineage
+    val a = sc.makeRDD(List(1 to 10))
+    val b = a.map((_,"b"))
+    val c = a.map((_,"b"))
+    val d = b.cogroup(c)
+    d.toDebugString
+    ParallelColectionRDD, MapPartititonRDD
+    Make the history of how the RDD has been created in the sc
