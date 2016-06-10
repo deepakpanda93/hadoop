@@ -1,15 +1,15 @@
 Runs on JVM and have certain interoperability with JAVA
 Scalable Language
-High perfomance,
+High performance,
 Statically typed, flexible syntaxis.
 Multi paradigm - Interactive, Functional and Object Oriented
 
 
-Values are inmutable, they can not change or reassign anything  (val myNumber : Int = 2)
+Values are immutable, they can not change or reassign anything  (val myNumber : Int = 2)
 Variables can change (var myString: String = "hello")
 
 Data types:
-Numerics : Byte, Short, Int, Long, Float, Double
+Numeric : Byte, Short, Int, Long, Float, Double
 Char, String , Boolean, Null
 
 Operators

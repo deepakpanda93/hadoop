@@ -1,6 +1,6 @@
 Map Reduce can only be used in batch operations, but spark is realtime and you could do realtime operations
 It is on top of spark engine.
-Real time decistions and anylitics, like credit card fraude detection, spam filtering,  click stream processing, network intrusion 
+Real time decisions and analytics, like credit card fraud detection, spam filtering,  click stream processing, network intrusion
   real time social media analytics, ad recommendation, stock market analytics
 Spark helps you 
   Look at data as they are created/arrive from source
@@ -17,7 +17,7 @@ Spark helps you
   Spark Streaming Architecture
   Master Node
     Spark context create the Streaming Context, need to be created before anything,
-    Set a Worker node as a receiver that will be listetning to the source for getting data, receiving input by soruce
+    Set a Worker node as a receiver that will be listening to the source for getting data, receiving input by soruce
     
   Worker Node
     Long Tasks .. Receiver. Collect the data
@@ -25,9 +25,9 @@ Spark helps you
     
   DStreams
   Streaming context need to be set from Spark context to create the support for the Stream
-  Discretized Stream is DStream on which processing occurs, link between Spark and Data soruce.
-  Micro Batches windoes is setuo for the DStream, data ingest in the system is setting in batches
-  The continuos stream becomes a micro batch series.
+  Discredited Stream is DStream on which processing occurs, link between Spark and Data source.
+  Micro Batches windows is setup for the DStream, data ingest in the system is setting in batches
+  The continuous stream becomes a micro batch series.
   Each micro-batch is an RDD
   Windows functions
     -Windows size multiple of interval

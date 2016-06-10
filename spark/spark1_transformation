@@ -1,7 +1,7 @@
 Perform operation on one RDD to create a new RDD
 This actions are used to operate on one element at the time
 Lazy evaluation
-Can be distribuited in multiples nodes, based on the partitions and act independently.
+Can be distributed in multiples nodes, based on the partitions and act independently.
 
 -MAP transformation
   newRdd = rdd.map(function)
