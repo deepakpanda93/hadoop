@@ -1,25 +1,29 @@
+Loading
 RDD can be created from Text files, JSON, parallize on collections, sequence files.
+
+Storing
 RDD can be stored to text files, JSON, sequence files, collections, databases, or use SPARK utilities 
 
 Partitioning 
 Partitions are enable per RDD by default, based on the parameter spark.default.parallelism, by default number of cores in clusters
 Should configure in large clusters to know what is the correct partition size.
 Can be specified the number during creation of RDD
-If you transform the same number of partition than the source will be used.
+Derived RDD take the same number of partitions as the source.
 
 Persistence
 Load when need to be used and dropped once is over.
+This avoid re compute the entire RDD chain, persist intermediate RDD so dont need to be recompute
 Can be persistent intermediate RDD to save it to avoid reprocessing,
-  persist()- Memory, disk, shared or third sink
+  persist()- Memory, disk, shared or third party sink
   cache()- Use the default persist method - In memory
 
 Broadcast variables.
 All the variables all local unles you use broadcast variables, and can be used across the entire cluster
-Used to lookup tables or similars
-Read only variables shared in all nodes
-Spark optimization of distribution and storage to get better performance.
+Used to lookup tables or similars functions.
+Read only variables shared in all nodes, once created can not modifiedl
+Spark optimization of distribution and storage to get better performance in the spark clusters
 
 Accumulators.
-A shared variables that can be used and updates in all the nodes in any moment.
+A shared variables that can be used and updates in all the nodes in any moment at the same time.
 Help when the reduce operations not take certain items, for any unsupport things
 Spark distribute and takes care of race conditions
