@@ -27,3 +27,36 @@ Accumulators.
 A shared variables that can be used and updates in all the nodes in any moment at the same time.
 Help when the reduce operations not take certain items, for any unsupport things
 Spark distribute and takes care of race conditions
+
+
+
+Some spark examples.
+val datadir = "C:\Users\mauricio.mena\github";
+val collData = sc.parallelize(Array(3,5,4,7,4));
+collData.cache();
+collData.count();
+
+val carData = sc.textFile(datadir+"/auto-data.csv");
+carData.cache()
+
+scala> val collData = sc.parallelize(Array(3,5,4,7,4));
+collData: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[1] at parallelize at <console>:21
+scala> collData.cache();
+res3: collData.type = ParallelCollectionRDD[1] at parallelize at <console>:21
+scala> collData.count();
+[Stage 0:>                                                          (0 + 0) / 4]
+res4: Long = 5
+scala> val datadir = "C://Users//mauricio.mena//github";
+datadir: String = C://Users//mauricio.mena//github
+scala> val carData = sc.textFile(datadir+"/auto-data.csv");
+cscala> carData.count()
+res7: Long = 198
+scala> carData.first()
+res8: String = MAKE,FUELTYPE,ASPIRE,DOORS,BODY,DRIVE,CYLINDERS,HP,RPM,MPG-CITY,MPG-HWY,PRICE
+scala> carData.take(4)
+res9: Array[String] = Array(MAKE,FUELTYPE,ASPIRE,DOORS,BODY,DRIVE,CYLINDERS,HP,R
+PM,MPG-CITY,MPG-HWY,PRICE, subaru,gas,std,two,hatchback,fwd,four,69,4900,31,36,5
+118, chevrolet,gas,std,two,hatchback,fwd,three,48,5100,47,53,5151, mazda,gas,std
+,two,hatchback,fwd,four,68,5000,30,31,5195)carData: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[3] at textFile at <console>:23
+
+
