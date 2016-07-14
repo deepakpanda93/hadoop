@@ -38,6 +38,24 @@ collData.count();
 
 val carData = sc.textFile(datadir+"/auto-data.csv");
 carData.cache()
+carData.count()
+for( x <- carData.collect() ) { println(x) }
+
+val tsvData = carData.map( x => x.replace(",", "\t"));
+tsvData.take(5);
+
+val toyotaData = carData.filter( X => x.contains("toyota"));
+toyotaData.count();
+
+val words = carData.flatMap( x => x.split(","));   //MapPartitionsRDD
+for(x <- words.distinct().collect()){ println(x) }
+
+val word1 = sc.parallelize(Array("hello", "world", "my", "name"));
+val word2 = sc.parallelize(Array("hello", "world", "my", "Mauricio"));
+
+word1.union(word2).distinct().collect();
+word1.intersection(word2).collect();
+
 
 scala> val collData = sc.parallelize(Array(3,5,4,7,4));
 collData: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[1] at parallelize at <console>:21
