@@ -19,7 +19,7 @@ DataFrame. Is the unit for SparkSQL is an enhanced RDD, but additional capabilit
     registerAsTempTable , register dataframe as table within SQLContext, you then could run SQL queries
     Operations can be nested in a pipeline.
     
-  Methods.
+  Methods for RDD
   sqlContext.read.json()
   .show() - like table
   .printSchema() - show data types and nullable options
@@ -40,4 +40,23 @@ SQLContext
  var sqlContext = new org.apache.spark.sql.SQLContext(sc);
  import sqlContext.implicits._
  
+ 
+ From file from sqlContext
+ val empDf =  sqlContext.read.json(file)   -- take the schema from json keys
+ empDF.show()
+ empDF.printSchema()
+
+ From RDD
+ val depRDD = sc.parallelize(jsonString)
+ val depDF =  sqlContext.read.json(depRDD) 
+ 
+ To create dataframe as a table to run SQL against
+ depDF.registerTempTable("employees")
+ sqlContext.sql("select * from employees").show()
+ 
+ You can load from a table into dataframe, to import from JDBC
+ val demoDF =  sqlContext.read.format("jdbc").options().load()  --- 
+ 
+ You can create data frames from RDD
+ val myDF = rowRDD.toDF("colum1","column2","column3");
  
