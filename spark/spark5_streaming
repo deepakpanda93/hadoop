@@ -1,15 +1,17 @@
 Map Reduce can only be used in batch operations, but spark is realtime and you could do realtime operations
 It is on top of spark engine.
-Real time decisions and analytics, like credit card fraud detection, spam filtering,  click stream processing, network intrusion
+Real time decisions and analytics, like credit card fraud detection, spam filtering,  click stream processing, network intrusion,
   real time social media analytics, ad recommendation, stock market analytics
-Spark helps you 
+Real time also relies on historical data, combine with historical data, and from source you could do summarize, prediction
+
+Spark streaming sources.
   Look at data as they are created/arrive from source
     - from flat files
     - tcp/ip messages
     - apache flume, take log files from multiple clients and serialize them
     - apache kafka, take various sources and marshall to pass the messages
     - amazon kinesis
-    - social medias, rest api to listening
+    - social media, rest api to listening
   Transform, summarize and analyze
   Perform ML 
   Predict in real time
@@ -17,22 +19,39 @@ Spark helps you
   Spark Streaming Architecture
   Master Node
     Spark context create the Streaming Context, need to be created before anything,
-    Set a Worker node as a receiver that will be listening to the source for getting data, receiving input by soruce
+    Set a Worker node as a receiver that will be listening to the source for getting data, receiving input from source
     
   Worker Node
-    Long Tasks .. Receiver. Collect the data
-    Task ........ Cache and Task that perform the operations in real time.
+    Long Tasks .. Receiver. Collect the data, this task is running forever, keep collecting data
+    Task ........ Cache and Task that perform the operations in real time, from the receiver data is moved to cache
     
   DStreams
   Streaming context need to be set from Spark context to create the support for the Stream
   Discredited Stream is DStream on which processing occurs, link between Spark and Data source.
-  Micro Batches windows is setup for the DStream, data ingest in the system is setting in batches
-  The continuous stream becomes a micro batch series.
+  Micro Batches windows is setup for the DStream, data ingest in the system is setting in batches (1sec, 2sec, windows sizes)
+  The continuous stream becomes a micro batch series, data receive accumulated and processed as micro-batch
   Each micro-batch is an RDD
   Windows functions
-    -Windows size multiple of interval
-    -Sliding interval multiple of interval
-    
+    - Windows size multiple of interval (last X intervals) windowing function that use intervals.
+    - Sliding interval multiple of interval
+  It only save for limited amount of time and then should be persistent.
     
 var ssc =  new StreamingContext(sc, Seconds(1))
 var rddQueue = new Queue[RDD[Int]]()
+
+import org.apache.spark.streaming.StreamingContext._
+import scala.collection.mutable.Queue;
+
+val inputStream = ssc.queueStream(rddQueue)
+val mappedStream = inputStream.map(x => (x % 10 , 1 ))
+val reducedStream = mappedStream.reduceByKey((x,y) => x+y)
+reducedStream.print()
+
+ssc.start()
+for(i <- 1 to 10){
+  rddQueue += ssc.sparkContext.makeRDD(1 to 1000, 10)
+  }
+  Thread.sleep()
+}
+
+ssc.stop();   --- StreamingContext
