@@ -1,1 +1,9 @@
+echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install dsc21=2.1.1-1 cassandra=2.1.1
+sudo service cassandra stop
+export CQLSH_HOST=localhost
+
+
 
