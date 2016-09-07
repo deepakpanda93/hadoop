@@ -57,8 +57,7 @@ public class PartitionExample {
         }
     }
 
-    public static class Reduce extends MapReduceBase implements
-            Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class Reduce extends MapReduceBase implements Reducer<Text, IntWritable, Text, IntWritable> {
 
         @Override
         public void reduce(Text key, Iterator<IntWritable> values,
