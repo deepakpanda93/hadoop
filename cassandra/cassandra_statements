@@ -1,0 +1,26 @@
+create keyspace testDB with replication = { 
+  'class':'SimpleStrategy',
+  'replication_factor':3
+};
+
+use testDB;
+create table employee(empid int primary key, empFirstName text, empLastName text, salary double);
+describe table employee;
+insert into employee(empid, empfirstname, emplastname,salary) values (101,'Jack','Frank', 20000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (102,'Jim','Jackson', 25000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (200,'Tom','Hanks', 30000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (201,'Jennifer','Law', 20000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (202,'Scarlette','John', 32000.00);
+
+ select * from employee ;
+ select empFirstname, Salary from employee;
+ select * from employee where empid in (101,202);
+ select * from employee where salary = 32000;   ----- NOT valid as not exist the index
+ 
+ update employee set salary = 35000.00 where empid = 202;
+ update employee set salary = 35000.00 where empid in (101,202);
+ update employee set salary = 40000.00 where empid in (300,301);     --- Updates insert if not exist the primary key
+ 
+ delete from employee where empid = 101;
+ delete salary from employee where empid = 301;   --- Delete entire row as it does not have any other value
+ delete salary from employee where empid = 102;   --- Delete column value
