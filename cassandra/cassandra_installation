@@ -14,7 +14,11 @@ baseurl=http://rpm.DataStax.com/community
 enabled=1
 gpgcheck=0
 
- sudo yum install dsc20-2.0.11-1 cassandra20-2.0.11-1
- /etc/cassandra/conf
+sudo yum install dsc21-2.1.14-1 cassandra2.1.14-1
 
+In yum.conf
+timeout=300
+minrate=100
+
+ /etc/cassandra/conf
 
