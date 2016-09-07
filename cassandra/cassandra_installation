@@ -22,4 +22,7 @@ minrate=100
 
  /etc/cassandra/conf
  sudo service cassandra start
+ #Need to open the localhost for accept incomming request from cqlsh
+ sudo iptables -A INPUT -i lo -j ACCEPT  
+
 
