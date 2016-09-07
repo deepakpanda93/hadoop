@@ -27,7 +27,7 @@ public class PatentMapReduce extends Configured implements Tool{
 
     public int run(String[] args) throws Exception {
         Configuration configuration = getConf();
-        Job job = new Job(configuration, "PatentJob");
+        Job job = Job.getInstance(configuration, "PatentJob");
         job.setJarByClass(PatentMapReduce.class);
         job.setJobName("Patent aggregation job");
 

@@ -25,7 +25,7 @@ public class WordCount {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
-        Job job = new Job(configuration, "myWordCountJob");
+        Job job = Job.getInstance(configuration);
 
         job.setJarByClass(WordCount.class);
         job.setMapperClass(Map.class);

@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import java.io.IOException;
 
 /**
+ * hadoop jar hadoop-training.jar com.koitoer.sl.BasicJoinExample /user/cloudera/datasets/custs /user/cloudera/datasets/txns /user/cloudera/out/join
  * Join in the reducer example use the custs and txns data sets
  * Created by mauricio.mena on 06/09/2016.
  */
@@ -80,7 +81,7 @@ public class BasicJoinExample {
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
-        Job job = new Job(configuration, "Reduce-side join example");
+        Job job = Job.getInstance(configuration, "Reduce-side join example");
         job.setJarByClass(BasicJoinExample.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
