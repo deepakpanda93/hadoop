@@ -21,4 +21,5 @@ timeout=300
 minrate=100
 
  /etc/cassandra/conf
+ sudo service cassandra start
 
