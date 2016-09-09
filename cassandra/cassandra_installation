@@ -5,5 +5,24 @@ sudo apt-get install dsc21=2.1.1-1 cassandra=2.1.1
 sudo service cassandra stop
 export CQLSH_HOST=localhost
 
+sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+sudo vi /etc/yum.repos.d/DataStax.repo
+
+[DataStax]
+name=DataStax Repo for Apache Cassandra
+baseurl=http://rpm.DataStax.com/community
+enabled=1
+gpgcheck=0
+
+sudo yum install dsc21-2.1.14-1 cassandra2.1.14-1
+
+In yum.conf
+timeout=300
+minrate=100
+
+ /etc/cassandra/conf
+ sudo service cassandra start
+ #Need to open the localhost for accept incomming request from cqlsh
+ sudo iptables -A INPUT -i lo -j ACCEPT  
 
 
