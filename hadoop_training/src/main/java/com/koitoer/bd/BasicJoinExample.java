@@ -1,15 +1,17 @@
-package com.koitoer.sl;
+package com.koitoer.bd;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
 
 import java.io.IOException;
 
@@ -18,7 +20,7 @@ import java.io.IOException;
  * Join in the reducer example use the custs and txns data sets
  * Created by mauricio.mena on 06/09/2016.
  */
-public class JoinExample {
+public class BasicJoinExample {
 
     /**
      * Mapper for the customer data
@@ -80,7 +82,7 @@ public class JoinExample {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
         Job job = Job.getInstance(configuration, "Reduce-side join example");
-        job.setJarByClass(JoinExample.class);
+        job.setJarByClass(BasicJoinExample.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);

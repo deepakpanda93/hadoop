@@ -1,5 +1,6 @@
-package com.koitoer.sl;
+package com.koitoer.bd;
 
+import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -9,7 +10,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -20,10 +20,9 @@ import java.util.Map;
 /**
  * hadoop jar hadoop-training.jar com.koitoer.sl.DistributedCacheExample /user/cloudera/datasets/dcinput /user/cloudera/out/dc
  * Distributed Cache example is join in the mapper function use the abc.dat + dcinput datasets
- * This is the new version the latest API
  * Created by mauricio.mena on 06/09/2016.
  */
-public class DistributedCacheExample {
+public class DistributedCacheExampleV2 {
 
     public static class DistributedMapper extends Mapper<LongWritable, Text, Text, Text>{
 
@@ -40,13 +39,13 @@ public class DistributedCacheExample {
          * @throws IOException
          * @throws InterruptedException
          */
+        @Deprecated
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
-            URI[] files = context.getCacheFiles();
-            for(URI file : files){
-                if(file.getPath().contains("abc.dat")){
-                    Path path = new Path(file);
-                    BufferedReader reader = new BufferedReader(new FileReader(path.getName()));
+            Path[] files = DistributedCache.getLocalCacheFiles(context.getConfiguration());
+            for(Path file : files){
+                if(file.getName().equals("abc.dat")){
+                    BufferedReader reader = new BufferedReader(new FileReader(file.toString()));
                     String line = reader.readLine();
                     while(line != null){
                         String [] tokens = line.split("\t");
@@ -90,13 +89,15 @@ public class DistributedCacheExample {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
+    @Deprecated
     public static void main(String[] args) throws IOException, URISyntaxException, ClassNotFoundException, InterruptedException {
-        Job job = Job.getInstance();
-        job.setJarByClass(DistributedCacheExample.class);
+        Job job = new Job();
+        job.setJarByClass(DistributedCacheExampleV2.class);
         job.setJobName("Distributed cache example");
         job.setNumReduceTasks(0);
 
-        job.addCacheFile(new Path("/user/cloudera/datasets/abc.dat").toUri());
+        DistributedCache.addCacheFile(new URI("/user/cloudera/datasets/abc.dat"), job.getConfiguration());
+
         job.setMapperClass(DistributedMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
@@ -105,6 +106,7 @@ public class DistributedCacheExample {
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         job.waitForCompletion(true);
+
 
     }
 

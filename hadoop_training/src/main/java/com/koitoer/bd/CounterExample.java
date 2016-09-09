@@ -1,4 +1,4 @@
-package com.koitoer.sl;
+package com.koitoer.bd;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;

@@ -1,4 +1,4 @@
-package com.koitoer.sl;
+package com.koitoer.bd;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
