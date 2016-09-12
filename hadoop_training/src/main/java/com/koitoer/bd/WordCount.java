@@ -27,7 +27,7 @@ public class WordCount extends Configured implements Tool {
 
 
     public static void main(String[] args) throws Exception {
-        int exitCode = ToolRunner.run(new Configuration(), new WordSize(), args);
+        int exitCode = ToolRunner.run(new Configuration(), new WordCount(), args);
         System.exit(exitCode);
     }
 
@@ -35,6 +35,9 @@ public class WordCount extends Configured implements Tool {
     public int run(String[] args) throws Exception {
 
         Configuration configuration = getConf();
+        configuration.set("mapred.job.tracker", "local");
+        configuration.set("hadoop.tmp.dir","c:\\users\\mauricio.mena");
+        configuration.set("os.name","Windows");
         Job job = Job.getInstance(configuration);
 
         job.setJarByClass(WordCount.class);
