@@ -1,6 +1,7 @@
 package com.koitoer.bd;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -12,6 +13,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -20,11 +23,18 @@ import java.util.StringTokenizer;
  * Run using $hadoop jar hadoop-training-1.0.jar com.koitoer.sl.WordCount inputPath outputPath
  * Created by mauricio.mena on 31/08/2016.
  */
-public class WordCount {
+public class WordCount extends Configured implements Tool {
 
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-        Configuration configuration = new Configuration();
+    public static void main(String[] args) throws Exception {
+        int exitCode = ToolRunner.run(new Configuration(), new WordSize(), args);
+        System.exit(exitCode);
+    }
+
+    @Override
+    public int run(String[] args) throws Exception {
+
+        Configuration configuration = getConf();
         Job job = Job.getInstance(configuration);
 
         job.setJarByClass(WordCount.class);
@@ -42,7 +52,7 @@ public class WordCount {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1 );
+        return job.waitForCompletion(true) ? 0 : 1 ;
     }
 
     /**
