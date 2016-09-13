@@ -1,0 +1,49 @@
+Hadoop 
+
+Components of Core Hadoop.
+  - Cored hadoop keeps that in the HDFS.
+    Data is stored as large blocks and replicated across the HDFS in several nodes
+    Dont expect short times, latency large
+  - Map Reduce
+    Map and reduce functions commonly used in function programming, computational processing occurs on both structured and unstructured
+    Is a programming model and software frameworks
+  - HIVE
+    OLAP, scaling data analysis, its data structure is similar to traditional relational database with tables
+    DDL operationd and HiveQL is similar to SQL (table associated with HDFS directory) , each partition divide into buckets
+    Data minin, scalability, extensibility and fault tolerant
+    HiveSQL is mastered quickly as it is similar to SQL, but not ansi compliant. It also broke in map reduces
+    Hive is optimized to be read-only, does not support R/W operations
+  - PIG
+    Data extraction, have its Pg language
+    More user friendly to MapReduce, created queries for semistructured data as system logs, need to have predefined format
+    Pig Latin is the languages and compiles this as a job in map and reduces.
+
+HDFS.
+  Is redundant, each file segment is stored at least in three places. Files are stored in blocks.
+  Break files into block in fix sixe 64 mb, stored in multiple places in hadoop cluster
+  Are stored in the Data Node, but the Name Mode manages the file system namespace.
+  GFS was the inspiration of design HDFS, but not considered failure.
+  HDFS is scalable, just adding more data nodes, more nodes more capacity.
+  Name Node manage all this data, name file, permission and location of files blocks.
+  Name Node assemble and this is the point of contact of the applications.
+  Paths are considered to be relative to the base directory (put, copyFromLocal, cat, get)
+
+Map Reduce
+  Map Reduce Engine, (mappers and reducers).
+  hadoop-common and hadoop-mapreduce-client-core
+  Job Client -  Initilize and provides the jobs
+  JobTacker Node - Hadoop MR service, tracker runs on anme node, communicate with task tracer, reassign MR task, assign tasks
+                   process near the dat
+  Name Node - 
+  Tasktracker Node - Single point of failure, process task in their own nodes
+  
+1. Inputs from HDFS
+2. Fetch into local
+3. Create ky-valu pairs
+4. Apply job
+5. Local sorting, aggregation and combine results
+6. Save in Local
+7. Inform task tracker
+8. Pass to job tracker.
+  
+  

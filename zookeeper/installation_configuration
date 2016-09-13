@@ -1,0 +1,12 @@
+sudo apt-get update
+sudo apt-get install zookeeper
+sudo chmod 777 /var/log/zookeeper
+ sudo /usr/share/zookeeper/bin/zkServer.sh   -- 2181
+  sudo /usr/share/zookeeper/bin/zkCli.sh -ser ver localhost:2181
+
+
+create /kafka 100
+create -s -e /kafka/node 200
+create -s -e /kafka/node 201
+create -s -e /kafka/node 202
+ls /kafka

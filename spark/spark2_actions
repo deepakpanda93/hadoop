@@ -1,0 +1,38 @@
+Actions.
+Act on a RDD and produce a Result not an RDD.
+trigger the actions and execute the previously lazy evaluation functions
+
+collect - return elements of RDD as an array
+count - count number of elements in RDD
+first - first element in the RDD
+take(n), returns the first n elements
+
+reduce, performs operations across, each element in the RDD and return a result such as: sum, count
+        reduce takes a function that takes to values function(input1, input2), reduce function, recursively in each element in RDD
+        a, b, c, d, e
+        R,    c
+              R, d
+                 R, e
+                    R  -- recursively function
+                    
+        inputRDD = [a, b, c, d, e]
+        func ( func ( func ( func (a,b), c), d), e)
+                    
+        Does not work in partitions, in only performs in nodes, execute in serial fashion, not in pararell.
+        Map is parallel
+        
+aggregate, parallel computation across partitions and then combine them
+           execute action in different partition and then aggregate
+            - sequence, perform in each partition, can be happen in parallel
+            - combine, combine result of the sequence operation results, and produce a global result.
+            
+            seqOp = (lambda x, y:  function)  --- In each node, also parallel
+            combOp = (lambda x, y: function)  --- Combine at the end of the process.
+            collData.aggregate((0,1), seqOp, comboOp)
+            
+            
+  Pair RDD action
+        countByKey -- Count by each key
+        groupByKey -- Perform aggregation like sum and avg by key
+        reduceByKey  -- Reduce operations run for each key
+        aggregateByKey -- Aggregate by key

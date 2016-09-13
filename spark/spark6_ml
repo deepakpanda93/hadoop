@@ -1,0 +1,22 @@
+Regression Analysis.
+  Method of investigating functional relationshiop between varianles.
+  Estimate the value of dependant variables from independet using and equation.
+  When are continuos and have some correlation.
+  Goodness of Fit analaysis is important.
+  
+  Linear equation. R-square near to 1, will be ideal
+   Coefficients, Intercept and R-squared are the linea equation values
+   Fast, low cost in memory and cpu usage, excellent for linear relationship, relatively accurate continuos variables.
+   CONS: Can not model non-linear/fuzzy relationship, only numeric/continuos variables
+   
+  Decision Tree.
+   Predictor variables are used to build a tree that would progressively predict the target variable
+   Lead nodes provide the decisions
+   Branch nodes refine the decision process.
+   Trainign data is used to build a decision tree to predict the target.
+   Tree become a model. you use the model to predict for new data.
+   Different varaibles and idfferent sequences, you could view different trees and levels and outcome.
+   Using predictors with high selectivity gives faster results.
+   PRO: Easy to interpret and explan, works with missing data, sensitive to local variations, fast
+   CON: Limited accuracy, bias builds up prettry quicly, not good with large number of predictors.
+   APPS: Credit approvals, situations with legal needs to explain decisions, preliminary categorization

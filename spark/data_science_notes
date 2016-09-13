@@ -1,0 +1,38 @@
+Extract the knowledge from data. You need to look raw data and find useful information. Use data to provide solutions
+We learn something from the data, normally the past to make some predictions about the future.
+Predictions about the user behaviour to improve business outcomes
+There are theories, techniques from mathematics, statistics and also related to information of technology.
+Data scientist, somebody that practice data science, with some skills in business domain, analytics, data engineering.
+
+Entity, something that exists in which we made some research and try to find prediction, also has a business context.
+        like customers, patients, we could have different business context according the entity they represent.
+        Could be none living things like cars, traffic, weather
+
+Characteristic, information about the entities, that belongs to them, like the properties they have and can be managed based 
+        on a business context. like name, age, income, gender.
+
+Environment, is where entity exists, is the ecosystem under investigation, multiples entity can reside here
+        same entities can behave different in different environments, or under the same environment but with different
+        environment conditions can do different. city, country, climate, mode
+
+Event, activities in which entities participate, some business activity that happens in the environment, happens under certain
+        circumstances , like browsing, buying, selling, test, smoke test
+        
+Behaviour, in case of the event, what happens with the entity, also could be affected by environment and affected under other 
+        circumstance
+        
+DATA
+
+Outcome, result of the activities or based on result of event, that have importance for business, the outcome are values in response
+        of activities done, could be boolean, class, continuous.
+        
+Observation, a measurement about an event, we take the measure important for the business as they find useful to the business 
+        purpose, collect the information, recording the information.
+        
+DataSet, is a collection of observations, normally we call a record each of them, we could record in multiple forms.
+        Logical record, each record you will se the attributes that contains the characteristics, behaviour or outcomes
+        We could have structured, unstructured or semi-structure, we use these datasets to perform predictions about entities
+        Structured Data... Label and distinctive labeled, easy query and search
+        Unstructured Data.. Not label, as continuous test, attributes are present but not labeled
+        
+      

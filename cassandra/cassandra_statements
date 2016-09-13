@@ -1,0 +1,71 @@
+create keyspace testDB with replication = { 
+  'class':'SimpleStrategy',
+  'replication_factor':3
+};
+
+use testDB;
+create table employee(empid int primary key, empFirstName text, empLastName text, salary double);
+describe table employee;
+insert into employee(empid, empfirstname, emplastname,salary) values (101,'Jack','Frank', 20000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (102,'Jim','Jackson', 25000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (200,'Tom','Hanks', 30000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (201,'Jennifer','Law', 20000.00);
+insert into employee(empid, empfirstname, emplastname,salary) values (202,'Scarlette','John', 32000.00);
+
+ select * from employee ;
+ select empFirstname, Salary from employee;
+ select * from employee where empid in (101,202);
+ select * from employee where salary = 32000;   ----- NOT valid as not exist the index
+ 
+ update employee set salary = 35000.00 where empid = 202;
+ update employee set salary = 35000.00 where empid in (101,202);
+ update employee set salary = 40000.00 where empid in (300,301);     --- Updates insert if not exist the primary key
+ 
+ delete from employee where empid = 101;
+ delete salary from employee where empid = 301;   --- Delete entire row as it does not have any other value
+ delete salary from employee where empid = 102;   --- Delete column value
+
+
+ create table stocks(ticker text, year int, value double, primary key(ticker, year));  -- cluistering happens in year
+ insert into stocks(ticker, year, value) values ('XYZ', 2011, 20);
+ insert into stocks(ticker, year, value) values ('XYZ', 2012, 30);
+ insert into stocks(ticker, year, value) values ('XYZ', 2013, 40);
+ insert into stocks(ticker, year, value) values ('XYZ', 2014, 50);
+ insert into stocks(ticker, year, value) values ('ABC', 2011, 25);
+ insert into stocks(ticker, year, value) values ('ABC', 2012, 35);
+ insert into stocks(ticker, year, value) values ('ABC', 2013, 45);
+ insert into stocks(ticker, year, value) values ('ABC', 2014, 55);
+ 
+select * from stocks where ticker = 'XYZ';
+select * from stocks where ticker = 'XYZ' and year = 2011;
+select * from stocks where ticker = 'XYZ' and year >= 2011 and year <= 2014;
+
+select * from stocks where year >= 2011 and year <= 2014;  --- not work as it does not follow the order of PK
+
+copy stocks to 'stocks.csv' with delimiter = '|';
+
+describe databases;
+describe tables;
+
+create table newstocks(ticker text, year int, value double, primary key(ticker, year));  -- cluistering happens in year
+
+copy newstocks from 'stocks.csv' with delimiter = '|';
+
+create table testtab (key1 int, key2 int, key3 int, key4 int, val int, primary key ((key1,key2), key3, key4));
+insert into testtab(key1, key2, key3, key4, val) values (1,2,3,4,5);
+insert into testtab(key1, key2, key3, key4, val) values (1,2,3,5,6);
+insert into testtab(key1, key2, key3, key4, val) values (1,2,4,6,7);
+
+select * from testtab where key1 = 1 and key2 = 2;
+select * from testtab where key1 = 1 and key2 = 2 and key3 = 3 and key4 in (4,5);
+select * from testtab where key1 = 1 and key2 = 2 and key3 = 3;
+select * from testtab where key1 = 1 and key2 = 2 and key3 in (3,4) and key4 in (4,5); -- leading keys must have values, ONLY LAST
+select * from testtab where key1 = 1 and key3 = 3;  -- MUST have all preceding parts.
+select * from testtab where key1 = 1 and key2 = 2 and key3 = 3;
+
+alter table stocks add supportNumber set<text>;
+update stocks set supportnumber = {'1800800800'} where ticker = 'ABC' and year = 2011;
+update stocks set supportnumber = supportnumber + {'1800800801'} where ticker = 'ABC' and year = 2011;
+update stocks set supportnumber = supportnumber - {'1800800801'} where ticker = 'ABC' and year = 2011;
+
+

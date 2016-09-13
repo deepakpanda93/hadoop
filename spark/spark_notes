@@ -1,0 +1,97 @@
+http://spark.apache.org.
+Fast and general engine for large-scala data processing, faster than apache hadoop as it is not batch processing.
+Cluster computing framework, and it is open source engine.
+End-to-end analytics.
+Develop to overcome limitation of hadoop, map reduce are very disk based and batch processing. More real time
+Spark keeps data in memory, can be run along other hadoop components.
+Can run in single desktop or huge clusters
+Iterative and interactive(analytic shell) or stream processing (data is coming and you do some processing)
+Scala, R, Python, Java. --- Spark is develop in Scala.
+Options a libraries like Graph, SQL, ML, Streaming
+
+Use Cases.
+ - Data integration and ETL
+ - Interactive  Analytics.
+ - High Performance Batch computation
+ - Machine Libraries and Advanced Analytics.
+ - Real time stream processing.
+ 
+      Credit Card Fraud Detection
+      Network Intrusion Detection
+      Advertisement Targeting.
+
+Workflow.
+ Load from Source, HDFS, NoSQL, S#, Real time sources
+ Transform data, filter, clean, join,enhance
+ Store processed data, memory, hdfs, nosql
+ Interactive Analytics, shells, spark sql, third-party tools
+ Machine Learning, discovery and algorithms
+ Action based on decision and results of analysis
+
+Spark Fwk.
+1. Programming ----- Scala
+               ----- Python
+               ----- Java
+               ----- R
+               ----- Tools
+2. Library --------- SPARK SQL, provide an easy SQL interface on SPARK
+           --------- ML Lib, machine library, a bunch of machine learning algorithm
+           --------- GraphX, perform graph anaylisis
+           --------- Streaming, analyze real time data, sockets, or streams.
+3. Engine ---------- SPARK CORE, perform operations, support interface to get and store
+4. Management ------ YARN, distributed scheduled system, you could use to manage SPARK
+              ------ MESOS
+              ------ SPARK SCHEDULER
+5. Storage --------- LOCAL, local filesystem
+           --------- HDFS
+           --------- S3
+           --------- RDBMS
+           --------- NoSQL
+           
+           
+           
+Resilient Distributed Datasets (RDD)
+Anything you do is around RDD, basically you create, transform, analyze and store RDD in Spark
+RDD have types like String, Lines, Rows, Objects, Collections
+RDD can be distributed across multiple nodes.
+RDD are immutable, once created you can not changes, only if yo do transformation, but you create new RDD
+RDD can be cached and also persisted (Memory or Disk)
+Actions are used to analyze RDD and provide results.
+
+
+Architecture.
+A. Master Node 
+  A.1 Driver Program, program or interactive shell, main executable program, control and coordinates all operations. Main class
+                      defines as well the RDD and execute the jobs.
+     A.1.1  Spark Context, anything you do go to this context. Create the RDD, give links, represent connection to computer cluster
+                           used to build the RDDs, communicate with cluster manager and manage executors running on workers.
+                           distributed also the RDDS in the cluster, and finally collect the results.
+     
+B. Cluster Manager, identify the worker nodes and pass the tasks.
+
+C. Worker Node, handle the RDD, are the slaves nodes and execute the tasks, execute jobs in fast way
+ C.1 Executor
+  C.1.1 Task
+  C.1.2 Cache, you could have more RDD in memory than disk
+  
+Spark scalability
+ Single JVM
+ Managed Cluster
+ 
+ Spark Modes
+  Batch mode - Scheduled
+  Interactive mode - Interactive
+  Streaming mode - Continuous
+  
+ Lazy evaluation : Do not load or transform data unless an action is performed.
+    Internally optimize operations and resource usage collect operation will make an eager evaluation.
+    You are taking notes, you are not executing nothing, action are the triggers for the commands
+   
+ RDD Lineage
+    val a = sc.makeRDD(List(1 to 10))
+    val b = a.map((_,"b"))
+    val c = a.map((_,"b"))
+    val d = b.cogroup(c)
+    d.toDebugString
+    ParallelCollectionRDD, MapPartitionRDD
+    Make the history of how the RDD has been created in the sc
