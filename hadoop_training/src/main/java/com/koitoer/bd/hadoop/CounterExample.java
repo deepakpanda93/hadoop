@@ -33,7 +33,7 @@ public class CounterExample {
      * @throws InterruptedException
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-        Job job = new Job();
+        Job job = Job.getInstance();
         job.setJarByClass(CounterExample.class);
         job.setNumReduceTasks(0);
         job.setJobName("CounterTest");

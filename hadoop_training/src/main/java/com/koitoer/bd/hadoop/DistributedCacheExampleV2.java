@@ -91,7 +91,7 @@ public class DistributedCacheExampleV2 {
      */
     @Deprecated
     public static void main(String[] args) throws IOException, URISyntaxException, ClassNotFoundException, InterruptedException {
-        Job job = new Job();
+        Job job = Job.getInstance();
         job.setJarByClass(DistributedCacheExampleV2.class);
         job.setJobName("Distributed cache example");
         job.setNumReduceTasks(0);
