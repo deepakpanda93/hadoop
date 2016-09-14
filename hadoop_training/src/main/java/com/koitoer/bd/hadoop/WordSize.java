@@ -27,7 +27,7 @@ public class WordSize extends Configured implements Tool {
 
     public int run(String[] args) throws Exception {
         Configuration configuration = getConf();
-        Job job = new Job(configuration, "WordSize");
+        Job job = Job.getInstance(configuration, "WordSize");
         job.setJarByClass(WordSize.class);
         job.setJobName("Word size count job");
 

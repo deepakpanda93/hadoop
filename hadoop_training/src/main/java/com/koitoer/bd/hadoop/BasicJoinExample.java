@@ -87,6 +87,7 @@ public class BasicJoinExample {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
+
         MultipleInputs.addInputPath(job, new Path(args[0]),TextInputFormat.class, CustomerMapper.class);
         MultipleInputs.addInputPath(job, new Path(args[1]),TextInputFormat.class, TransactionMapper.class);
         Path outputPath = new Path(args[2]);

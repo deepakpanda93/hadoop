@@ -44,7 +44,7 @@ public class DistributedCacheExampleV2 {
         protected void setup(Context context) throws IOException, InterruptedException {
             Path[] files = DistributedCache.getLocalCacheFiles(context.getConfiguration());
             for(Path file : files){
-                if(file.getName().equals("abc.dat")){
+                if(file.getName().equals("datasets/abc.dat")){
                     BufferedReader reader = new BufferedReader(new FileReader(file.toString()));
                     String line = reader.readLine();
                     while(line != null){
