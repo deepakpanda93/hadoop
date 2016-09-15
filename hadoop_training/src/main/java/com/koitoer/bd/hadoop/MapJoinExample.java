@@ -29,6 +29,8 @@ public class MapJoinExample {
 
 
     /**
+     * https://github.com/bbejeck/hadoop-algorithms/blob/master/src/bbejeck/mapred/joins/reduce/ManyToManyReduceSideJoinDriver.java
+     * http://codingjunkie.net/mapreduce-reduce-joins/
      * src/main/resources/join/dataset1 src/main/resources/join/dataset2 mje_out
      * Hadoop sorts all keys and guarantees that keys with the same value are sent to the same reducer
      * @param args
