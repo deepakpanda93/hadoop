@@ -65,3 +65,40 @@ vi /usr/local/hadoop/etc/hadoop/hdfs-site.xml
  start-yarn.sh
  jps
 
+
+##Clusters
+core-site.xml
+  <configuration>
+  	<property>
+  		<name>fs.defaultFS</name>
+  		<value>hdfs://IP:9000</value>
+  	</property>
+  </configuration>
+
+hdfs-site.xml
+  <configuration>
+          <property>
+                  <name>dfs.replication</name>
+                  <value>#</value>
+          </property>
+  </configuration>
+
+  vi mapred-site.xml
+      <configuration>
+              <property>
+                      <name>mapred.job.tracker</name>
+                      <value>IP:9001</value>
+              </property>
+      </configuration>
+
+sudo vi /usr/local/hadoop/conf/masters  ADD IP_s from MASTER
+sudo vi /usr/local/hadoop/conf/slaves   ADD_IP_s from SLAVES
+
+ssh-keygen
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hadoop@IPs
+
+IN MASTER start-all.sh
+IN SLAVES start-all.sh
+
+hdfs dfsadmin -safemode leave
