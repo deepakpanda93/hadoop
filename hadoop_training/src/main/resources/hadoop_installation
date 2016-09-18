@@ -1,3 +1,15 @@
+##Raspberry configuration network
+cat /etc/network/interfaces
+allow-hotplug wlan0
+iface wlan0 inet static
+address 192.168.0.22
+netmask 255.255.255.0
+gateway 192.168.0.1 
+wpa-conf /etc/wpa_supplicant.conf
+iface default inet dhcp
+
+
+
 sudo apt-get update
 sudo apt-get install openjdk-7-jdk
 sudo apt-get install sudo
@@ -9,10 +21,14 @@ sudo vi /etc/apt/sources.list
 sudo apt-get install rsync
 wget http://download.nextag.com/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 tar xvzf hadoop-2.7.3.tar.gz
+sudo vi /etc/sudoers
+hadoop ALL=(ALL) NOPASSWD: ALL
+
 sudo ln -s /home/hadoop/hadoop-2.7.3 /usr/local/hadoop
 
+
 vi ~/.bashrc
- export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64  OR /usr/lib/jvm/java-7-openjdk-armhf
  export HADOOP_PREFIX=/usr/local/hadoop
  export PATH=$PATH:$HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin
  
@@ -38,15 +54,15 @@ vi /usr/local/hadoop/etc/hadoop/hdfs-site.xml
           </property>
   </configuration>
   
-  cp /usr/local/hadoop/etc/hadoop/mapred-site.xml.template mapred-site.xml
-  vi mapred-site.xml
+  cp /usr/local/hadoop/etc/hadoop/mapred-site.xml.template /usr/local/hadoop/etc/hadoop/mapred-site.xml
+  vi /usr/local/hadoop/etc/hadoop/mapred-site.xml
       <configuration>
               <property>
                       <name>mapreduce.framework.name</name>
                       <value>yarn</value>
               </property>
       </configuration>
-  cp mapred-site.xml /usr/local/hadoop/etc/hadoop/
+
   
   vi /usr/local/hadoop/etc/hadoop/yarn-site.xml
         <configuration>
