@@ -1,0 +1,65 @@
+Retail Project Hadoop Developer
+
+Explanation 
+
+I am using the formula called Compound Annual Growth Rate 
+Basically is CAGR = ( ( (ending_value / beginning value ) ^ ( 1 / number_of_years ) ) - 1 ) * 100
+
+Apache HIVE LOAD DATA scripts
+
+CREATE TABLE records(index INT, code STRING, category STRING, JAN DOUBLE, FEB DOUBLE, MAR DOUBLE, APR DOUBLE, MAY DOUBLE, JUN DOUBLE, JUL DOUBLE, AUG DOUBLE, SEP DOUBLE, OCT DOUBLE, NOV DOUBLE, DIC DOUBLE,
+ TOTAL DOUBLE, YEAR INT, ADJ STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' ;
+LOAD DATA INPATH '/user/koitoer_gmail/retail_project/files/2000.txt' OVERWRITE INTO TABLE records;
+LOAD DATA INPATH '/user/koitoer_gmail/retail_project/files/2005.txt' INTO TABLE RECORDS;
+LOAD DATA INPATH '/user/koitoer_gmail/retail_project/files/2006.txt' INTO TABLE RECORDS;
+LOAD DATA INPATH '/user/koitoer_gmail/retail_project/files/2013.txt' INTO TABLE RECORDS;
+LOAD DATA INPATH '/user/koitoer_gmail/retail_project/files/2015.txt' INTO TABLE RECORDS;
+
+------------------------------------------------
+1. Analyze the entire data set and arrive at products that have experienced a consolidated yearly
+growth of 10% or more in sales since 2000.
+Explanation: I will use data from 2000 as the beginning year and 2015 as the end year.
+	     I will use and index to make a difference between the Adjusted and Not adjusted values. (First column)
+	     I will use another column with the year (Last column)
+          
+SQL:
+select a.index, a.code, a.category, (pow(b.total/a.total, 1/15) - 1) * 100  CAGR FROM 
+( select index, code, category, total, year from records WHERE index is not null and year = 2000 ) a, 
+( select index, code, category, total, year from records WHERE index is not null and year = 2015 ) b
+WHERE a.index == b.index AND (pow(b.total/a.total, 1/15) - 1) * 100 > 10
+
+Result : 0, no products have such CAGR. The product with more growth between those years is 'Electronic shopping and mail-order houses'
+Screenshot:retailSS1.png
+
+2. Analyze the entire data set and arrive at products that have experienced a consolidated yearly
+drop of 5% or less since 2000.
+Explanation: I will use data from 2000 as the beginning year and 2015 as the end year.
+	     I will use and index to make a difference between the Adjusted and Not adjusted values. (First column)
+	     I will use another column with the year (Last column)
+SQL:
+select a.index, a.code, a.category, (pow(b.total/a.total, 1/15) - 1) * 100  CAGR FROM 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2000 ) a, 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2015 ) b
+WHERE a.index == b.index AND (pow(b.total/a.total, 1/15) - 1) * 100 =< 5
+Screenshot:retailprojectSS22.png
+
+3. Arrive at products that have experienced a growth of 10% or more in sales from 2000 to 2005,
+and then subsequently experienced a drop of at least 2% in sales from 2006 to 2013.
+SQL:
+select c.index, c.code, c.category  FROM (
+--Here experienced a growth of 10% or more in sales from 2000 to 2005 returning [53, 54, 97, 98] indexes
+select a.index, a.code, a.category, (pow(b.total/a.total, 1/5) - 1) * 100  CAGR FROM 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2000 ) a, 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2005 ) b
+WHERE a.index == b.index AND (pow(b.total/a.total, 1/5) - 1) * 100 >= 10 ) c,
+
+---Here experienced a drop of at least 2% in sales from 2006 to 2013.returning [13-16, 24, 45-52, 57, 58 , 77, 79 ,81, 96] indexes
+(select a.index, a.code, a.category, (pow(b.total/a.total, 1/7) - 1) * 100  CAGR FROM 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2006 ) a, 
+( select index, code, category, total, year from records WHERE index is not null and total is not null and year = 2013 ) b
+WHERE a.index == b.index AND (pow(b.total/a.total, 1/7) - 1) * 100 <= -2 ) d
+
+WHERE c.index == d.index
+
+Screenshot:RetailProject3.png
+There is no match between the two conditions.
