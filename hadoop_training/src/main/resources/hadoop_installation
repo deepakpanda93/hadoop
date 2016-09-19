@@ -19,6 +19,17 @@ $ sudo wpa_supplicant -B -D wext -i wlan0 -c /etc/wpa_supplicant.conf
 sudo apt-get update
 sudo apt-get install rsync
 sudo apt-get install oracle-java8-jdk
+sudo update-alternatives --config java
+
+sudo apt-get install cmake
+sudo apt-get install libc6-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install maven
+wget https://issues.apache.org/jira/secure/attachment/12570212/HADOOP-9320.patch
+patch < HADOOP-9320.patch
+
+cp target/native/target/usr/local/lib/libhadoop.a $HADOOP_PREFIX/lib/native
+cp target/native/target/usr/local/lib/libhadoop.so.1.0.0 $HADOOP_PREFIX/lib/native
 
 ##Configuring hadoop jvm
 sudo addgroup hadoop
@@ -156,3 +167,13 @@ IN MASTER start-all.sh
 IN SLAVES start-all.sh
 
 hdfs dfsadmin -safemode leave
+
+
+URL checked
+https://kuntalganguly.blogspot.com/2014/07/building-native-hadoop-libraries-to-fix.html
+http://www.linuxsolutions.org/faqs/generic/java
+http://stackoverflow.com/questions/32823375/compiling-hadoop-2-7-1-on-arm-raspbian
+http://www.becausewecangeek.com/native-hadoop-for-armv7/
+https://developer.ibm.com/recipes/tutorials/building-a-hadoop-cluster-with-raspberry-pi/#r_step13
+http://scn.sap.com/community/bi-platform/blog/2015/04/25/a-hadoop-data-lab-project-on-raspberry-pi--part-14
+http://kuntalganguly.blogspot.in/2014/07/building-native-hadoop-libraries-to-fix.html
