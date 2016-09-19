@@ -10,3 +10,24 @@ create -s -e /kafka/node 200
 create -s -e /kafka/node 201
 create -s -e /kafka/node 202
 ls /kafka
+
+##Create some watchers to take the data and remove the events
+
+node1
+create /1001 mydata
+get /1001
+create -s -e /s1001/mytest data1
+create -s -e /s1001/mytest data2
+ls /s1001
+
+node 2 
+create -s -e /s1001/mytest data3
+create -s -e /s1001/mytest data4
+ls /s1001
+get /s1001/mytestxxxxxx2 watch
+get /s1001/mytestxxxxxx3 watch
+
+node 1
+delete /s1001/mytestxxxxxx2
+node2 
+NODELETEDEVENT
