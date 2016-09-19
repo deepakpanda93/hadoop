@@ -1,19 +1,42 @@
-##Raspberry configuration network
+##Raspberry configuration wireless network
+
 cat /etc/network/interfaces
-allow-hotplug wlan0
-iface wlan0 inet static
-address 192.168.0.22
-netmask 255.255.255.0
-gateway 192.168.0.1 
-wpa-conf /etc/wpa_supplicant.conf
-iface default inet dhcp
+   allow-hotplug wlan0
+   iface wlan0 inet static
+   address 192.168.0.22
+   netmask 255.255.255.0
+   gateway 192.168.0.1 
+   wpa-conf /etc/wpa_supplicant.conf
+   iface default inet dhcp
 
+$ sudo ip link set wlan0 up  
+$ ip link show wlan0
+$ sudo /sbin/iw wlan0 scan
+$ wpa_passphrase WirelessKoit >> /etc/wpa_supplicant.conf 
+$ sudo wpa_supplicant -B -D wext -i wlan0 -c /etc/wpa_supplicant.conf
 
-
+##Raspberry linux configuration
 sudo apt-get update
+sudo apt-get install rsync
+sudo apt-get install oracle-java8-jdk
+
+##Configuring hadoop jvm
+sudo addgroup hadoop
+sudo adduser --ingroup hadoop hadoop
+sudo adduser hadoop sudo
+ssh-keygen -t rsa -P ""
+cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+
+sudo mkdir /opt/hadoop/
+sudo mkdir /opt/hadoop_tmp/
+
+http://www-us.apache.org/dist/hadoop/common/hadoop-2.6.4/hadoop-2.6.4.tar.gz
+
+
+
 sudo apt-get install openjdk-7-jdk
 sudo apt-get install sudo
-sudo apt-get install ssh
+#sudo apt-get install ssh
 sudo vi /etc/apt/sources.list
    deb http://ftp.debian.org/debian/ jessie-updates main
    deb-src http://ftp.debian.org/debian/ jessie-updates main
@@ -28,7 +51,7 @@ sudo ln -s /home/hadoop/hadoop-2.7.3 /usr/local/hadoop
 
 
 vi ~/.bashrc
- export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64  OR /usr/lib/jvm/java-7-openjdk-armhf
+ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64  OR /usr/lib/jvm/java-7-openjdk-armhf OR /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt
  export HADOOP_PREFIX=/usr/local/hadoop
  export PATH=$PATH:$HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin
  
@@ -80,6 +103,21 @@ vi /usr/local/hadoop/etc/hadoop/hdfs-site.xml
  jps
  start-yarn.sh
  jps
+
+##Recompile libraries
+https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
+./configure
+make
+make check
+sudo apt-get install zlib1g-dev
+iptables -I INPUT -j ACCEPT
+
+$ cd hadoop-common-project/hadoop-common
+$ export HADOOP_PROTOC_PATH=[path to protobuf]/src/protoc
+$ mvn compile -Pnative
+
+hdfs> cp target/native/target/usr/local/lib/libhadoop.a $HADOOP_HOME/lib/native
+hdfs> cp target/native/target/usr/local/lib/libhadoop.so.1.0.0 $HADOOP_HOME/lib/native
 
 
 ##Clusters
