@@ -38,3 +38,30 @@ CREATE TABLE president (sno BIGINT, line STRING)
   FIELDS TERMINATED BY ',';
 LOAD DATA INPATH 'hdfs:/data/small/presidents.txt' OVERWRITE INTO TABLE president PARTITION (country='USA');
 LOAD DATA INPATH 'hdfs:/data/small/presidentsMX.txt' OVERWRITE INTO TABLE president PARTITION (country='MX');
+
+== YAHOO STOCK MARKET ==
+curl -o yahoo.csv http://ichart.finance.yahoo.com/table.csv?s=YHOO
+curl -o google.csv http://ichart.finance.yahoo.com/table.csv?s=GOGO
+curl -o apple.csv http://ichart.finance.yahoo.com/table.csv?s=AAPL
+curl -o expedia.csv http://ichart.finance.yahoo.com/table.csv?s=EXPE
+
+ sed -i -n '2, $p' google.csv expedia.csv yahoo.csv apple.csv 
+hdfs dfs -mkdir /stockdata 
+hdfs dfs -put google.csv yahoo.csv apple.csv expedia.csv /stockdata
+create table stockdata (tradedata string, openval double, highval double, lowval double, closeval double, volume double,
+  adjclose double) partitioned by (ticker string) 
+  row format delimited fields terminated by ',';
+  
+load data inpath 'hdfs:/stockdata/google.csv' overwrite into table stockdata partition (ticker='GOGO');
+load data inpath 'hdfs:/stockdata/apple.csv' overwrite into table stockdata partition (ticker='AAPL');
+load data inpath 'hdfs:/stockdata/yahoo.csv' overwrite into table stockdata partition (ticker='YHOO');
+load data inpath 'hdfs:/stockdata/expedia.csv' overwrite into table stockdata partition (ticker='EXPE');
+
+select substring(tradedata, 1, 4), min(adjClose), max(adjClose) from stockdata where ticker = 'GOGO' 
+  group by substring(tradedata, 1, 4); 
+
+create table stockdataP  stored as parquet as select * from stockdata;
+select ticker, substring(tradedata,1,4), count(*) from stockdatap group by ticker, substring(tradedata,1,4)
+
+hdfs dfs -ls /user/hive/warehouse/stockdata
+
