@@ -1,0 +1,40 @@
+wget http://mirror.cogentco.com/pub/apache/hive/stable/apache-hive-1.2.1-bin.tar.gz
+tar xvzf apache-hive-1.2.1-bin.tar.gz
+sudo ln -s /home/hadoop/apache-hive-1.2.1-bin /usr/local/hive
+hdfs dfs -mkdir -p /tmp
+hdfs dfs -mkdir -p /user/hive/warehouse
+hdfs dfs -chmod g+w /tmp
+hdfs dfs -chmod g+w /user/hive/warehouse
+
+wget https://archive.org/stream/warandpeace030164mbp/warandpeace030164mbp_djvu.txt
+hdfs dfs -mkdir -p /data/small
+cp warandpeace030164mbp_djvu.txt war_and_peace.txt
+hdfs dfs -put war_and_peace.txt /data/small/
+
+
+create table book (word STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ' ' LINES TERMINATED BY '\n' ;
+LOAD DATA INPATH 'hdfs:/data/small/war_and_peace.txt' INTO TABLE book;
+
+select lower(word), count(*) as count from book 
+  where lower(substring(word,1,3))='was' 
+  group by word 
+  having count > 50 
+  sort by count desc;
+----- was	590
+
+set hive.exec.reducers.bytes.per.reducer=<number>
+set hive.exec.reducers.max=<number>
+set mapreduce.job.reduces=<number>
+
+create table book2 (textword STRING) ROW FORMAT DELIMITED FIELD TERMINATED BY '\N' STORED AS TEXTFILE;
+LOAD DATA INPATH 'hdfs:/data/small/gutenberg.txt' INTO TABLE book2;
+select word, count(*) from book2 LATERAL VIEW explode(split(textword, ' ' )) xtable as word
+  group by word;
+
+=== PARTITIONS ===  
+CREATE TABLE president (sno BIGINT, line STRING) 
+  PARTITIONED BY (country STRING)
+  ROW FORMAT DELIMITED
+  FIELDS TERMINATED BY ',';
+LOAD DATA INPATH 'hdfs:/data/small/presidents.txt' OVERWRITE INTO TABLE president PARTITION (country='USA');
+LOAD DATA INPATH 'hdfs:/data/small/presidentsMX.txt' OVERWRITE INTO TABLE president PARTITION (country='MX');
