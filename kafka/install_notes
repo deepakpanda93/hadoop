@@ -1,0 +1,6 @@
+export KAFKA_PREFIX=/usr/local/kafka
+export PATH=$PATH:$KAFKA_PREFIX/bin
+vi /usr/local/kafka/bin/zookeper-server-start.sh
+export KAFKA_HEAP_OPTS="-Xmx64M -Xms64M"
+vi /usr/local/kafka/bin/kafka-server-start.sh
+export KAFKA_HEAP_OPTS="-Xmx128M -Xms128M"
