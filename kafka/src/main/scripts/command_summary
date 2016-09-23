@@ -1,0 +1,24 @@
+kafka-topic.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic test
+kafka-topic.sh --alter -zookeeper localhost:2181 --replication-factor 4 --topic test
+kafka-topic.sh --list
+kafka-topic.sh --describe --topic test
+kafka-topic.sh --delete--topic test
+
+kafka-console-producer.sh
+    --broker-list   list of brokers to connect and sent the messages, instead of zookeeper list
+    --topic
+    --sync          if sync is sent immediately, if async messages are batched by default in 200 messages
+    --batch-size
+    --timeout
+
+kafka-console-producer.sh --broker-list localhost:9092 --topic test
+kafka-console-producer.sh --broker-list localhost:9092 --topic test <  FILE
+
+
+kafka-console-consumer.sh
+    --zookeeper
+    --topic
+    --from-beginning    bring all the message does not matter the creation date
+    --whitelist         specify a list of topics to include
+    --blacklist         specify a list of topics to exlude
+    --consumer.config   consumer.properties
