@@ -35,6 +35,7 @@ public class WordCount extends Configured implements Tool {
     public int run(String[] args) throws Exception {
 
         Configuration configuration = getConf();
+        //configuration.set("yarn.resourcemanager.address", "192.168.0.22");
         //configuration.set("mapred.job.tracker", "local");
         //configuration.set("hadoop.tmp.dir","/home/koitoer/tmp");
         //configuration.set("os.name","Windows");
