@@ -30,3 +30,5 @@ nohup /usr/local/kafka/bin/zookeper-server-start.sh /usr/local/kafka/config/zook
 nohup /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
     > /tmp/kafka.out 2> /tmp/kafka.error &
     
+##Usage
+kafka-topic.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
