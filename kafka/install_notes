@@ -4,3 +4,29 @@ vi /usr/local/kafka/bin/zookeper-server-start.sh
 export KAFKA_HEAP_OPTS="-Xmx64M -Xms64M"
 vi /usr/local/kafka/bin/kafka-server-start.sh
 export KAFKA_HEAP_OPTS="-Xmx128M -Xms128M"
+
+#Zookeeper for distributed coordination
+/usr/local/kafka/config/zookeper.properties
+initLimit=5
+syncLimit=2
+maxClientsCnxns=0
+server.1=localhost:2888:3888
+
+echo 1> /tmp/myid
+sudo cp /tmp/myid /tmp/zookeper/myid
+
+vi /usr/local/kafka/config/server.properties
+broker.id=1
+port=9092
+zookeeper.conect=localhost:2181
+quequed.max.request=100
+auto.create.topics.enable=false
+
+##Init zookeeper
+nohup /usr/local/kafka/bin/zookeper-server-start.sh /usr/local/kafka/config/zookeper.properties
+    > /tmp/zk.out 2> /tmp/zk.error &
+    
+##Init kafka
+nohup /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
+    > /tmp/kafka.out 2> /tmp/kafka.error &
+    
