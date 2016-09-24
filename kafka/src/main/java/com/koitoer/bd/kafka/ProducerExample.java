@@ -13,6 +13,7 @@ public class ProducerExample {
         Properties properties = new Properties();
         properties.put("metadata.broker.list", "localhost:9092");
         properties.put("serializer.class", "kafka.serializer.StringEncoder");
+        /*
         ProducerConfig config = new ProducerConfig(properties);
 
         Producer<String, String > producer = new Producer<String, String>(config);
@@ -28,8 +29,7 @@ public class ProducerExample {
 
         data = new KeyedMessage<String, String>(topic, key2, message2);
         producer.send(data);
-
-        producer.close();
+*/
     }
 }
 
