@@ -1,0 +1,62 @@
+SQL features on top of Spark core, SQL like data and operations
+Hive is another solution used on top of Hadoop.
+Fast processing and solve the problems of RDBMs, easy to change from RDBMS to big dta.
+Works with the structured data using schemas, to know what is the structure of the data.
+Table, columns, data type concepts continue in sparkSQL
+Mix SQL queries with spark programs, so you could use JDBC support interface
+Can work variety for RDBMS and NoSQL, mix n match, recognition of schema and able to start working.
+
+DataFrame. Is the unit for SparkSQL is an enhanced RDD, but additional capabilities.
+  Distributed collection need to be organized in rows and columns, with data types.
+  Has a schema, with column nmes as well.
+  These are RDD but optimized as we know a defined schema that we need to support.
+  Can we create them from CSV, Hive/NoSQL table,s JSON, RDD, Database tables.
+  Operations supported are:
+    filter - filter based on conditions
+    join -  sql operations to join two dataframes in common column
+    groupBy
+    agg - sum and average as an aggregation operations
+    registerAsTempTable , register dataframe as table within SQLContext, you then could run SQL queries
+    Operations can be nested in a pipeline.
+    
+  Methods for RDD
+  sqlContext.read.json()
+  .show() - like table
+  .printSchema() - show data types and nullable options
+  .select("columnNam").show()
+  .select("columnNam1", "col2").show(2)
+  .filter(dff("col1") === value).show()
+  .groupBy().count()
+  .groupBy().agg(avg(), sum()).show()
+  
+  
+    
+SQLContext
+ SparkSQL functiones are accessed through it.
+ Derived from SparkContext, their is achil.
+ DataFrame are created using it.
+ Provides a standard interface to work across different datasoruces
+ Can register Data Frames as temporal tables and start running commands on them
+ var sqlContext = new org.apache.spark.sql.SQLContext(sc);
+ import sqlContext.implicits._
+ 
+ 
+ From file from sqlContext
+ val empDf =  sqlContext.read.json(file)   -- take the schema from json keys
+ empDF.show()
+ empDF.printSchema()
+
+ From RDD
+ val depRDD = sc.parallelize(jsonString)
+ val depDF =  sqlContext.read.json(depRDD) 
+ 
+ To create dataframe as a table to run SQL against
+ depDF.registerTempTable("employees")
+ sqlContext.sql("select * from employees").show()
+ 
+ You can load from a table into dataframe, to import from JDBC
+ val demoDF =  sqlContext.read.format("jdbc").options().load()  --- 
+ 
+ You can create data frames from RDD
+ val myDF = rowRDD.toDF("colum1","column2","column3");
+ 

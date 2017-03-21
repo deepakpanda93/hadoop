@@ -1,0 +1,67 @@
+wget http://mirror.cogentco.com/pub/apache/hive/stable/apache-hive-1.2.1-bin.tar.gz
+tar xvzf apache-hive-1.2.1-bin.tar.gz
+sudo ln -s /home/hadoop/apache-hive-1.2.1-bin /usr/local/hive
+hdfs dfs -mkdir -p /tmp
+hdfs dfs -mkdir -p /user/hive/warehouse
+hdfs dfs -chmod g+w /tmp
+hdfs dfs -chmod g+w /user/hive/warehouse
+
+wget https://archive.org/stream/warandpeace030164mbp/warandpeace030164mbp_djvu.txt
+hdfs dfs -mkdir -p /data/small
+cp warandpeace030164mbp_djvu.txt war_and_peace.txt
+hdfs dfs -put war_and_peace.txt /data/small/
+
+
+create table book (word STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ' ' LINES TERMINATED BY '\n' ;
+LOAD DATA INPATH 'hdfs:/data/small/war_and_peace.txt' INTO TABLE book;
+
+select lower(word), count(*) as count from book 
+  where lower(substring(word,1,3))='was' 
+  group by word 
+  having count > 50 
+  sort by count desc;
+----- was	590
+
+set hive.exec.reducers.bytes.per.reducer=<number>
+set hive.exec.reducers.max=<number>
+set mapreduce.job.reduces=<number>
+
+create table book2 (textword STRING) ROW FORMAT DELIMITED FIELD TERMINATED BY '\N' STORED AS TEXTFILE;
+LOAD DATA INPATH 'hdfs:/data/small/gutenberg.txt' INTO TABLE book2;
+select word, count(*) from book2 LATERAL VIEW explode(split(textword, ' ' )) xtable as word
+  group by word;
+
+=== PARTITIONS ===  
+CREATE TABLE president (sno BIGINT, line STRING) 
+  PARTITIONED BY (country STRING)
+  ROW FORMAT DELIMITED
+  FIELDS TERMINATED BY ',';
+LOAD DATA INPATH 'hdfs:/data/small/presidents.txt' OVERWRITE INTO TABLE president PARTITION (country='USA');
+LOAD DATA INPATH 'hdfs:/data/small/presidentsMX.txt' OVERWRITE INTO TABLE president PARTITION (country='MX');
+
+== YAHOO STOCK MARKET ==
+curl -o yahoo.csv http://ichart.finance.yahoo.com/table.csv?s=YHOO
+curl -o google.csv http://ichart.finance.yahoo.com/table.csv?s=GOGO
+curl -o apple.csv http://ichart.finance.yahoo.com/table.csv?s=AAPL
+curl -o expedia.csv http://ichart.finance.yahoo.com/table.csv?s=EXPE
+
+ sed -i -n '2, $p' google.csv expedia.csv yahoo.csv apple.csv 
+hdfs dfs -mkdir /stockdata 
+hdfs dfs -put google.csv yahoo.csv apple.csv expedia.csv /stockdata
+create table stockdata (tradedata string, openval double, highval double, lowval double, closeval double, volume double,
+  adjclose double) partitioned by (ticker string) 
+  row format delimited fields terminated by ',';
+  
+load data inpath 'hdfs:/stockdata/google.csv' overwrite into table stockdata partition (ticker='GOGO');
+load data inpath 'hdfs:/stockdata/apple.csv' overwrite into table stockdata partition (ticker='AAPL');
+load data inpath 'hdfs:/stockdata/yahoo.csv' overwrite into table stockdata partition (ticker='YHOO');
+load data inpath 'hdfs:/stockdata/expedia.csv' overwrite into table stockdata partition (ticker='EXPE');
+
+select substring(tradedata, 1, 4), min(adjClose), max(adjClose) from stockdata where ticker = 'GOGO' 
+  group by substring(tradedata, 1, 4); 
+
+create table stockdataP  stored as parquet as select * from stockdata;
+select ticker, substring(tradedata,1,4), count(*) from stockdatap group by ticker, substring(tradedata,1,4)
+
+hdfs dfs -ls /user/hive/warehouse/stockdata
+

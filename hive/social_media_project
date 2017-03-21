@@ -1,0 +1,49 @@
+Social Media Project HIVE Queries.
+
+--- INSERT DATA Script into HIVE ---
+CREATE EXTERNAL TABLE data (event int, question_id int, user_id int,  score int, question_time int, tags array<string>, views int, answers int, answer_id int , answer_user_id int , answer_score int , answer_time int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' COLLECTION ITEMS TERMINATED BY ',' LINES TERMINATED BY '\n';
+LOAD DATA INPATH '/user/koitoer_gmail/social_project/answers.txt' OVERWRITE INTO TABLE data;
+
+
+1. Top 10 most commonly used tags in this data set.
+SQL : select count(*) count , a.tag from (select explode(tags) tag from data) a GROUP BY a.tag ORDER BY count DESC LIMIT 10;
+ScreenShot: Top10UsedTags.png
+
+2. Average time to answer questions
+SQL : SELECT a.question_id question, FROM_UNIXTIME(CAST(avg(a.time_t) as BIGINT), 'HH:mm:ss.SSS') avg_answer_time FROM ( SELECT question_id, question_time, answer_time, (answer_time - question_time) time_t, answers FROM data WHERE question_id  IS NOT NULL) a
+GROUP BY (a.question_id);
+ScreenShot: AverageTimePerQuestion.png
+
+
+3. Number of questions which got answered within 1 hour.
+Answer 1. If we consider the average time
+SQL:  SELECT count(*) FROM (
+SELECT a.question_id question, FROM_UNIXTIME(CAST(avg(a.time_t) as BIGINT), 'HH:mm:ss.SSS') avg_answer_time,  avg(a.time_t) seconds
+FROM ( SELECT question_id, question_time, answer_time, (answer_time - question_time) time_t, answers FROM data WHERE question_id  IS NOT NULL) a
+GROUP BY (a.question_id)) v WHERE seconds < 3600
+ScreenShot: QuestionsAnswerWithin1.png
+42662
+
+Answer 2. If we consider particular time per each question
+SQL: SELECT COUNT(*) FROM (
+SELECT DISTINCT(m.question_id) FROM (
+SELECT question_id, question_time, answer_time, (answer_time - question_time) time_t, answers FROM data 
+WHERE question_id  IS NOT NULL AND (answer_time - question_time) < 3600) m ) N
+Screenshot:  questionperhourbyeachtime.png
+67392
+
+4. Tags of questions which got answered within 1 hour
+Answer 1. If we consider the average time
+SQL: SELECT DISTINCT(d.tags) FROM (
+SELECT a.question_id question FROM ( 
+SELECT question_id, (answer_time - question_time) time_t FROM data WHERE question_id  IS NOT NULL AND (answer_time - question_time) <= 3600) a
+GROUP BY (a.question_id)) p, data d 
+WHERE p.question = d.question_id
+Screenshot: avgperquestiontags.png
+
+Answer 2. If we consider particular time per each question
+SQL: SELECT DISTINCT(m.tags) FROM (
+SELECT question_id, question_time, answer_time, (answer_time - question_time) time_t, answers, tags FROM data 
+WHERE question_id  IS NOT NULL AND (answer_time - question_time) < 3600) m 
+Screenshot: TagsPerQuestionWithinHour.png

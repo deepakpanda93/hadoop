@@ -1,0 +1,128 @@
+Big Data, general term for data sets so large and complex.
+Volume (TB, PB)
+Variety (web, photo, video, audio, unstructured data)
+Velocity (batch, periodic, real time)
+Veracity (quality of the data, could be data with wrong format or data types - dirty)
+
+Need to store and process huge amount of data, needed for web and cloud application.
+RDMBS - Not scale without expensive hardware, only good with clean data, fault tolerant is expensive.
+Existing process techniques does not scale without extensive code development.
+
+2002 - Apache Nutch
+2003 - Google File System and Map Reduce.
+2004 - GFS and MT to Nutch project
+2006 - Hadoop is created.
+2008 - Apps started to emerge
+2009 - Companies start to emerge using hadoop - Clouder, Horthonworks
+
+  -----   Hadoop    -------
+  
+Elephant toy called Hadoop - Doug Cutting
+Consist in 2 components
+  - HDFS
+  - Map Reduce
+Platform as a service to data ingestion, processing and analytics of data
+Unix based not windows support. Built natively in JAVA. Command Line based, not much UI
+
+-- Hadoop Distributed File System.
+Another Distributed file system files and directories. Distribuited files across different nodes
+Optimized for very large files (TB, PB), optimized write-once, read many, you could not update the file
+Fault tolerant by default - No bkps required, as it have replication in 3 nodes. Always a copy of the file.
+Data replication happens all the time, if is missing or its a new.
+Runs on commodity hardware. Not need big machines to develop processes.
+Move code to where data resides, not viceversa, data is left in the nodes, code is move to the nodes.
+Master - Slave architecture, processes are both and running in java
+Built as a HDFS Cluster :  
+    NameNode (Master) - Manage cluster, manage meta-data, which file store in which node, allocate work to data nodes
+    DataNode (Slave) - Storage and read-write operations, work is being done here
+
+File are split in blocks of 64 MB, namenode manage information for blocks.
+Each node is replicate 3 times, across multiple data nodes.
+Client  -- NameNode --- DataNode  . client request R/W permission, namenode give list of datanodes
+Client -----------------DataNode  . client R/W directly to data node.
+HDFS is rack-aware.  The copies are created in at least 2 racks.
+
+
+Map Reduce
+New programming paradigm built to exploit the parallel nature of HDFS data.
+Run the same programm in parallel working with different same of data.
+Batch mode execution, running from hours and finding outputs.
+Move the program code to the data nodes, we could also chain the map reduce for a large solution
+
+Components.
+    Job Manager , run on name node, plans the execution of job, works with the namenode, return result to client
+                  invoke tasks in another node if one fails.
+    Task Manager, each run in the data node, execute the map and reduce functions, execute the jobs.
+    
+    YARN (MapReducev2)  Job Manager is split across = Application Manager and Resource Manager. More robust solution
+    
+Map and Reduce
+    Map, function that takes input values and output is key and values.
+          run once per line in the file.
+    Reduce, function that works on that key at the time, output is key and values. 
+
+1.Map Function
+2.Reduce Function
+3.Jar or iles with the code
+4.Input HDFS directory
+5.Output HDFS directory (be sure this does not exists)
+
+Input is being splitted, basically pass to a specific data node, then the client copies files containing map function to each node 
+identified as a node, then the code is being executed there by the local task manager, at this step multiple processes will run
+in parallel on different splits.
+
+Task manager iterate on the input files and run the function map, the map function interpret / split / convert and process lines.
+Map function clean data (format), some filter capabilities as well
+Map function generate key/values.
+
+Merge and Sort step is done in hadoop, the output for all the executions in the datanodes are merge and then sorted by the keys.
+Values for the same key are converted to a list, so you could have no more repeated keys, instead you have one line per key and the
+values form a list.  <key, listOfValues)
+
+Typycally one reduce function is executed, the input for reduce function is the output of merge and sort process, then the reduce
+function iterates over key by key and it is called once for each key,
+Reduce function can work across multiple key, the output of reduce function is placed in output directory.
+
+extends Mapper<Object, Text, Text, IntWritable>
+public void map (Object key, Text text, Context context) throws IOException, InterruptedException{}
+
+extends Reducer<Text, IntWritable, Text, IntWritable>
+public void reduce (Text key, Iterable<IntWritable> values, Context context)
+
+Job job = new Job(conf, "Name");
+job.setJarByClass
+job.setMapperClass
+job.setReducerClass
+job.setOutputKeyClass
+job.setOutputValueClass
+File.addInputPath
+File.addOutputPath
+
+haddop jar exercise.jar exercise data output
+hadoop jar name.jar class_file input_dir output_dir
+
+
+Hadoop Stack.
+-HDFS
+-Map-Reduce
+-Flume & Sqoop, data injection application from RDMS to hadoop, RDMS to HDFS
+               log messages
+-PIG, data processing analaytic tool and programming language, to write data processing and summarization process.
+     pig code to map reduce and then map reduce executed in MR
+-HIVE, SQL like functionallity, can write SQL queries and executed on top of haddop, convert queries to map reduce.
+-Mahout, machine learning libraries and application, there is algortihms .
+-Custom MR.
+
+-Impala, does not use MR and is like SQL style like Hive
+-Hbase, columnar database base on hdfs, key/value pair, no schema, access by the key is fast.
+-Spark, real time data in real time, streamming, and machine learning.
+-Storm, real time tool based on streaming, process result.
+
+-Zookeeper, use for management, internally store the nodes, the applications, we could find use running applications.
+-Oozie, scheduler application, you could schedule any job.
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+ hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.3-tests.jar TestDFSIO 
+  -write -nrFiles 5 -fileSize 100
+    
+    jps : 50075
+
+hadoop dfs -D dfs.blocksize=###bytes -copyFromLocal file1 /routehdfs
+hadoop fsck /routInHDFS
+hadoop dfs -stat %o /routeinHDFS

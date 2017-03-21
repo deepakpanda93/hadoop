@@ -1,0 +1,28 @@
+wget http://mirrors.ibiblio.org/apache/flume/1.6.0/apache-flume-1.6.0-bin.tar.gz
+tar zxvf apache-flume-1.6.0-bin.tar.gz
+
+vi flume.properties
+testagent.sources = tail-source
+testagent.channels = fileChannel
+testagent.sinks = hdfs-sink
+##Connect source-channel-sink
+testagent.sources.tail-source.channels = fileChannel
+testagent.sinks.hdfs-sink.channel = fileChannel
+##Definition of types
+testagent.sources.tail-source.type=exec
+testagent.channels.fileChannel.type=file
+testagent.sinks.hdfs-sink.type=hdfs
+#Configure source
+testagent.sources.tail-source.command=tail -F /home/hadoop/logfile
+#Configure channel
+testagent.channels.fileChannel.checkpointDir = flume-example/checkpoint1
+testagent.channels.fileChannel.dataDirs= flume-example/data1f
+#Configure sink
+testagent.sinks.hdfs-sink.hdfs.path=hdfs://localhost:9000/user/test
+testagent.sinks.hdfs-sink.hdfs.fileType=DataStrea
+
+nohup /usr/local/flume/bin/flume-ng agent -n testagent -c /usr/local/flume/conf 
+      -f /usr/local/flume/conf/flume.properties > flume.out 2>flume.err &
+      cat hola.txt >> logfile
+      
+/usr/local/flume/bin/flume-ng agent -n testagent -c /usr/local/flume/conf -f /usr/local/flume/conf/flume.properties

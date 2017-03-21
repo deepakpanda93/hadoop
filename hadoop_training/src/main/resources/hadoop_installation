@@ -1,0 +1,187 @@
+##Raspberry configuration wireless network
+
+cat /etc/network/interfaces
+   allow-hotplug wlan0
+   iface wlan0 inet static
+   address 192.168.0.22
+   netmask 255.255.255.0
+   gateway 192.168.0.1 
+   wpa-conf /etc/wpa_supplicant.conf
+   iface default inet dhcp
+
+$ sudo ip link set wlan0 up  
+$ ip link show wlan0
+$ sudo /sbin/iw wlan0 scan
+$ wpa_passphrase WirelessKoit >> /etc/wpa_supplicant.conf 
+$ sudo wpa_supplicant -B -D wext -i wlan0 -c /etc/wpa_supplicant.conf
+
+##Raspberry linux configuration
+sudo apt-get update
+sudo apt-get install rsync
+sudo apt-get install oracle-java8-jdk
+sudo update-alternatives --config java
+
+sudo apt-get install cmake
+sudo apt-get install libc6-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install maven
+wget https://issues.apache.org/jira/secure/attachment/12570212/HADOOP-9320.patch
+patch < HADOOP-9320.patch
+
+cp target/native/target/usr/local/lib/libhadoop.a $HADOOP_PREFIX/lib/native
+cp target/native/target/usr/local/lib/libhadoop.so.1.0.0 $HADOOP_PREFIX/lib/native
+
+##Configuring hadoop jvm
+sudo addgroup hadoop
+sudo adduser --ingroup hadoop hadoop
+sudo adduser hadoop sudo
+ssh-keygen -t rsa -P ""
+cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+
+sudo mkdir /opt/hadoop/
+sudo mkdir /opt/hadoop_tmp/
+
+http://www-us.apache.org/dist/hadoop/common/hadoop-2.6.4/hadoop-2.6.4.tar.gz
+
+
+
+sudo apt-get install openjdk-7-jdk
+sudo apt-get install sudo
+#sudo apt-get install ssh
+sudo vi /etc/apt/sources.list
+   deb http://ftp.debian.org/debian/ jessie-updates main
+   deb-src http://ftp.debian.org/debian/ jessie-updates main
+   deb http://ftp.us.debian.org/debian/ jessie contrib non-free main
+sudo apt-get install rsync
+wget http://download.nextag.com/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+tar xvzf hadoop-2.7.3.tar.gz
+sudo vi /etc/sudoers
+hadoop ALL=(ALL) NOPASSWD: ALL
+
+sudo ln -s /home/hadoop/hadoop-2.7.3 /usr/local/hadoop
+
+
+vi ~/.bashrc
+ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64  OR /usr/lib/jvm/java-7-openjdk-armhf OR /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt
+ export HADOOP_PREFIX=/usr/local/hadoop
+ export PATH=$PATH:$HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin
+ 
+source ~/.bashrc
+
+ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
+
+##Configuring hadoop
+vi /usr/local/hadoop/etc/hadoop/core-site.xml
+  <configuration>
+  	<property>
+  		<name>fs.defaultFS</name>
+  		<value>hdfs://localhost:9000</value>
+  	</property>
+  </configuration>
+
+vi /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+  <configuration>
+      <property>
+         <name>dfs.replication</name>
+         <value>1</value>
+      </property>
+      <property>
+         <name>dfs.namenode.name.dir</name>
+         <value>/home/hadoop/mydata/hdfs/namenode</value>
+      </property>
+      <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/home/hadoop/mydata/hdfs/datanode</value>
+      </property>
+  </configuration>
+  
+  cp /usr/local/hadoop/etc/hadoop/mapred-site.xml.template /usr/local/hadoop/etc/hadoop/mapred-site.xml
+  vi /usr/local/hadoop/etc/hadoop/mapred-site.xml
+      <configuration>
+              <property>
+                      <name>mapreduce.framework.name</name>
+                      <value>yarn</value>
+              </property>
+      </configuration>
+
+  
+  vi /usr/local/hadoop/etc/hadoop/yarn-site.xml
+        <configuration>
+              <property>
+                      <name>yarn.nodemanager.aux-services</name>
+                      <value>mapreduce_shuffle</value>
+              </property>
+      </configuration>
+      
+      vi /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+  
+##Init hadoop
+ hdfs namenode -format
+ start-dfs.sh 
+ jps
+ start-yarn.sh
+ jps
+
+##Recompile libraries
+https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
+./configure
+make
+make check
+sudo apt-get install zlib1g-dev
+iptables -I INPUT -j ACCEPT
+
+$ cd hadoop-common-project/hadoop-common
+$ export HADOOP_PROTOC_PATH=[path to protobuf]/src/protoc
+$ mvn compile -Pnative
+
+hdfs> cp target/native/target/usr/local/lib/libhadoop.a $HADOOP_HOME/lib/native
+hdfs> cp target/native/target/usr/local/lib/libhadoop.so.1.0.0 $HADOOP_HOME/lib/native
+
+
+##Clusters
+core-site.xml
+  <configuration>
+  	<property>
+  		<name>fs.defaultFS</name>
+  		<value>hdfs://IP:9000</value>
+  	</property>
+  </configuration>
+
+hdfs-site.xml
+  <configuration>
+          <property>
+                  <name>dfs.replication</name>
+                  <value>#</value>
+          </property>
+  </configuration>
+
+  vi mapred-site.xml
+      <configuration>
+              <property>
+                      <name>mapred.job.tracker</name>
+                      <value>IP:9001</value>
+              </property>
+      </configuration>
+
+sudo vi /usr/local/hadoop/conf/masters  ADD IP_s from MASTER
+sudo vi /usr/local/hadoop/conf/slaves   ADD_IP_s from SLAVES
+
+ssh-keygen
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub hadoop@IPs
+
+IN MASTER start-all.sh
+IN SLAVES start-all.sh
+
+hdfs dfsadmin -safemode leave
+
+
+URL checked
+https://kuntalganguly.blogspot.com/2014/07/building-native-hadoop-libraries-to-fix.html
+http://www.linuxsolutions.org/faqs/generic/java
+http://stackoverflow.com/questions/32823375/compiling-hadoop-2-7-1-on-arm-raspbian
+http://www.becausewecangeek.com/native-hadoop-for-armv7/
+https://developer.ibm.com/recipes/tutorials/building-a-hadoop-cluster-with-raspberry-pi/#r_step13
+http://scn.sap.com/community/bi-platform/blog/2015/04/25/a-hadoop-data-lab-project-on-raspberry-pi--part-14
+http://kuntalganguly.blogspot.in/2014/07/building-native-hadoop-libraries-to-fix.html

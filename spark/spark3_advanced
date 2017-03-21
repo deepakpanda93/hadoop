@@ -1,0 +1,121 @@
+Loading
+RDD can be created from Text files, JSON, parallize on collections, sequence files.
+
+Storing
+RDD can be stored to text files, JSON, sequence files, collections, databases, or use SPARK utilities 
+
+Partitioning 
+Partitions are enable per RDD by default, based on the parameter spark.default.parallelism, by default number of cores in clusters
+Should configure in large clusters to know what is the correct partition size.
+Can be specified the number during creation of RDD
+Derived RDD take the same number of partitions as the source.
+
+Persistence
+Load when need to be used and dropped once is over.
+This avoid re compute the entire RDD chain, persist intermediate RDD so dont need to be recompute
+Can be persistent intermediate RDD to save it to avoid reprocessing,
+  persist()- Memory, disk, shared or third party sink
+  cache()- Use the default persist method - In memory
+
+Broadcast variables.
+All the variables all local unles you use broadcast variables, and can be used across the entire cluster
+Used to lookup tables or similars functions.
+Read only variables shared in all nodes, once created can not modifiedl
+Spark optimization of distribution and storage to get better performance in the spark clusters
+
+Accumulators.
+A shared variables that can be used and updates in all the nodes in any moment at the same time.
+Help when the reduce operations not take certain items, for any unsupport things
+Spark distribute and takes care of race conditions
+
+
+
+Some spark examples.
+val datadir = "C:\Users\mauricio.mena\github";
+val collData = sc.parallelize(Array(3,5,4,7,4));
+collData.cache();
+collData.count();
+
+val carData = sc.textFile(datadir+"/auto-data.csv");
+carData.cache()
+carData.count()
+for( x <- carData.collect() ) { println(x) }
+
+val tsvData = carData.map( x => x.replace(",", "\t"));
+tsvData.take(5);
+
+val toyotaData = carData.filter( X => x.contains("toyota"));
+toyotaData.count();
+
+val words = carData.flatMap( x => x.split(","));   //MapPartitionsRDD
+for(x <- words.distinct().collect()){ println(x) }
+
+val word1 = sc.parallelize(Array("hello", "world", "my", "name"));
+val word2 = sc.parallelize(Array("hello", "world", "my", "Mauricio"));
+
+word1.union(word2).distinct().collect();
+word1.intersection(word2).collect();
+
+
+scala> val collData = sc.parallelize(Array(3,5,4,7,4));
+collData: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[1] at parallelize at <console>:21
+scala> collData.cache();
+res3: collData.type = ParallelCollectionRDD[1] at parallelize at <console>:21
+scala> collData.count();
+[Stage 0:>                                                          (0 + 0) / 4]
+res4: Long = 5
+scala> val datadir = "C://Users//mauricio.mena//github";
+datadir: String = C://Users//mauricio.mena//github
+scala> val carData = sc.textFile(datadir+"/auto-data.csv");
+cscala> carData.count()
+res7: Long = 198
+scala> carData.first()
+res8: String = MAKE,FUELTYPE,ASPIRE,DOORS,BODY,DRIVE,CYLINDERS,HP,RPM,MPG-CITY,MPG-HWY,PRICE
+scala> carData.take(4)
+res9: Array[String] = Array(MAKE,FUELTYPE,ASPIRE,DOORS,BODY,DRIVE,CYLINDERS,HP,R
+PM,MPG-CITY,MPG-HWY,PRICE, subaru,gas,std,two,hatchback,fwd,four,69,4900,31,36,5
+118, chevrolet,gas,std,two,hatchback,fwd,three,48,5100,47,53,5151, mazda,gas,std
+,two,hatchback,fwd,four,68,5000,30,31,5195)carData: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[3] at textFile at <console>:23
+
+
+collData.reduce((x,y) => x + y)
+carData.reduce((x,y) => if(x.length() < y.length) x else y)  -- Take line by line and reduce to the less long line
+collData.aggregate(0) ((x,y) => (x + y), (x,y) => (x+y))
+ Array[Int] = Array(3, 5, 4, 7, 4)
+ collData.aggregate(0) ((x,y) => (x + y), (x,y) => (x+y))   -- 23 
+ collData.aggregate(10) ((x,y) => (x + y), (x,y) => (x+y))  -- 73
+ 0+3, 1*3 = 3,3 
+ 0+5, 1*5 = 5,5
+ 0+4, 1*4 = 4,4
+ 0+7, 1*7 = 7,7
+ 0+4, 1*4 = 4,4
+          23, 1680
+  
+ collData.aggregate((0,1)) ((x,y) => (x._1 + y, x._2 * y),  (x,y) => (x._1 + y._1 , x._2 * y._2 )) -- (23,1680)
+ 
+ def cleanRDD( autoStr : String ) : String = {
+  val attList = autoStr.split(",");
+  if(attList(3).matches("two")){  attList(3) = "2" }
+  else { attList(3) = "4" }
+  attList(5) = attList(5).toUpperCase()
+  attList.mkString(",")
+ }
+ 
+ val cleancarData = carData.map(cleanRDD)
+ cleancarData.collect()
+ 
+ 
+ def isAllDigits(x : String) = x.matches("^\\d*$")
+ 
+ def getMPG( autoStr : String) : String = {
+  println(autoStr)
+  if(isAllDigits(autoStr)){return autoStr}
+  else{
+    val attList = autoStr.split(",")
+    if(isAllDigits(attList(9))){ return attList(9)}
+    else { return "0"}
+  }
+ }
+
+val totMPG = carData.reduce((x,y) => (getMPG(x).toInt + getMPG(y).toInt).toString)
+totMPG.toInt/(carData.count()-1)
